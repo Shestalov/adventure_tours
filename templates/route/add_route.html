@@ -1,0 +1,55 @@
+{% extends 'route/layout.html' %}
+
+{% block title %}Add route{% endblock %}
+
+{% block content %}
+    <form action="add_route" method="POST" class="form-signin w-50 m-auto">
+        {% csrf_token %}
+
+        <h1>Please add your rote</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" name="route_type" id="route_type" placeholder="Enter route type"
+                   required>
+            <label for="route_type">Route type</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="departure" id="departure" placeholder="Enter route departure"
+                   required>
+            <label for="departure">Departure</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="destination" id="destination"
+                   placeholder="Enter route destination" required>
+            <label for="destination">Destination</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="country" id="country" placeholder="Enter route country"
+                   required>
+            <label for="country">Country</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="location" id="location" placeholder="Enter route location"
+                   required>
+            <label for="location">Location</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="description" id="description"
+                   placeholder="Enter route description" required>
+            <label for="description">Description</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="duration" id="duration" placeholder="Enter route duration"
+                   required>
+            <label for="duration">Duration</label>
+        </div>
+        <br>
+        <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+    </form>
+{% endblock %}

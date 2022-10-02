@@ -1,0 +1,48 @@
+{% extends 'route/layout.html' %}
+
+{% block title %}Add event{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+    <form action="add_event" method="POST" class="form-signin w-50 m-auto">
+        {% csrf_token %}
+
+        <h1>Please add your rote</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" name="route_id" id="route_id" placeholder="Enter route id"
+                   required>
+            <label for="route_id">Enter route id</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="datetime-local" class="form-control" name="start_date" id="start_date" placeholder="Enter start date"
+                   required>
+            <label for="start_date">Enter start date</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="price" id="price"
+                   placeholder="Enter price" required>
+            <label for="price">Enter price</label>
+        </div>
+        <br>
+        <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+    </form>
+
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        config = {
+            minDate: "today",
+            altInput: true,
+            altFormat: "j F, Y",
+            dateFormat: "Y-m-d",
+        }
+        flatpickr("input[type=datetime-local]", config);
+    </script>
+
+{% endblock %}
