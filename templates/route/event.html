@@ -1,0 +1,13 @@
+{% extends 'route/layout.html' %}
+
+{% block content %}
+    <ul>
+        {% for itm in result %}
+            <li>
+                {"id": "{{ itm.id }}", "event_admin": "{{ itm.event_admin }}",
+                "approved_users": "{{ itm.approved_users }}", "start_date": "{{ itm.start_date }}",
+                "price": "{{ itm.price }}"}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

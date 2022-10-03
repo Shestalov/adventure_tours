@@ -3,5 +3,11 @@
 {% block title %}Review{% endblock %}
 
 {% block content %}
-    {{ result }}
+    <ul>
+        {% for itm in result %}
+            <li>{"route_id": "{{ itm.route_id }}", "route_review": "{{ itm.route_review }}","route_rate":
+                "{{ itm.route_rate }}"}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

@@ -18,25 +18,17 @@ def filter_route(request, route_type=None, country=None, location=None):
         query_filter['location'] = location
 
     result = models.Route.objects.all().filter(**query_filter)
-    return render(request, 'route/filter.html', {'result': [{'id': itm.id,
-                                                             'route_type': itm.route_type,
-                                                             'country': itm.country,
-                                                             'location': itm.location} for itm in result]})
+    return render(request, 'route/filter_route.html', {'result': result})
 
 
-def route_info(request, route_id):
-    result = models.Route.objects.all().filter(id=route_id)
-    return render(request, 'route/route_info.html', {'result': [{'id': itm.id,
-                                                                 'departure': itm.departure,
-                                                                 'destination': itm.destination,
-                                                                 'duration': itm.duration} for itm in result]})
+def info(request, route_id):
+    result = models.Route.objects.filter(pk=route_id).all()
+    return render(request, 'route/info.html', {'result': result})
 
 
-def route_review(request, route_id):
+def review(request, route_id):
     result = models.Review.objects.all().filter(route_id=route_id)
-    return render(request, 'route/review.html', {'result': [{'route_id': itm.route_id,
-                                                             "route_review": itm.route_review,
-                                                             'route_rate': itm.route_rate} for itm in result]})
+    return render(request, 'route/review.html', {'result': result})
 
 
 def add_route(request):
@@ -59,11 +51,10 @@ def add_route(request):
                                  destination=destination_obj.id,
                                  country=country, location=location, description=description, duration=duration)
         new_route.save()
-
         return redirect('home')
 
 
-def add_event(request):
+def add_event(request, route_id):
     if request.method == 'GET':
         return render(request, 'route/add_event.html')
     if request.method == 'POST':
@@ -76,5 +67,6 @@ def add_event(request):
         return redirect('home')
 
 
-def event_handler(request):
-    pass
+def event(request, route_id):
+    result = models.Event.objects.all().filter(route_id=route_id)
+    return render(request, 'route/event.html', {"result": result})

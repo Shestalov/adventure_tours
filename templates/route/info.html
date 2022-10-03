@@ -1,0 +1,17 @@
+{% extends 'route/layout.html' %}
+
+{% block title %}Route info{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for itm in result %}
+            <li>
+                {"id": "{{ itm.id }}",
+                "departure": "{{ itm.departure }}",
+                "destination": "{{ itm.destination }}",
+                "duration": "{{ itm.duration }}",
+                "events": "{{ itm.events }}"}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

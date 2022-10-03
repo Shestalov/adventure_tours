@@ -30,7 +30,7 @@ class Route(models.Model):
 
 
 class Event(models.Model):
-    route_id = models.IntegerField()
+    route = models.ForeignKey(Route, on_delete=models.CASCADE)
     event_admin = models.IntegerField()
     approved_users = models.JSONField()
     pending_users = models.JSONField()
@@ -46,12 +46,13 @@ class Event(models.Model):
 
 
 class Review(models.Model):
-    route_id = models.IntegerField()
+
+    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
     route_review = models.TextField()
     route_rate = models.IntegerField()
 
     def __str__(self):
-        return f'Review {self.route_id}'
+        return f'Review {self.id}'
 
     class Meta:
         verbose_name = 'Review'
