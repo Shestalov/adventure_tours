@@ -22,8 +22,7 @@ def filter_route(request, route_type=None, country=None, location=None):
     if result.exists():
         return render(request, 'route/filter_route.html', {'result': result})
     else:
-        result = 'Does not exist'
-        return render(request, 'route/does_not_exist.html', {'result': result})
+        return render(request, 'route/does_not_exist.html', {'result': 'Does not exist'})
 
 
 def info(request, route_id):
@@ -32,8 +31,7 @@ def info(request, route_id):
         future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
         return render(request, 'route/info.html', {'result': result, 'future_events': future_events})
     else:
-        result = 'Route does not exist'
-        return render(request, 'route/does_not_exist.html', {'result': result})
+        return render(request, 'route/does_not_exist.html', {'result': 'Route does not exist'})
 
 
 def review(request, route_id):
@@ -41,8 +39,7 @@ def review(request, route_id):
     if result.exists():
         return render(request, 'route/review.html', {'result': result})
     else:
-        result = 'Reviews do not exist'
-        return render(request, 'route/does_not_exist.html', {'result': result})
+        return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist'})
 
 
 def add_route(request):
@@ -86,8 +83,7 @@ def event(request, route_id):
     if result.exists():
         return render(request, 'route/event.html', {"result": result})
     else:
-        result = 'Events do not exist'
-        return render(request, 'route/does_not_exist.html', {'result': result})
+        return render(request, 'route/does_not_exist.html', {'result': 'Events do not exist'})
 
 
 def login(request):
