@@ -5,7 +5,8 @@
 {% block content %}
     <ul>
         {% for itm in result %}
-            <li>{"route_type": "{{ itm.route_type }}", "country": "{{ itm.country }}","location":
+            <li>
+                {"route_type": "{{ itm.route_type }}", "country": "{{ itm.country }}","location":
                 "{{ itm.location }}"}
             </li>
         {% endfor %}
