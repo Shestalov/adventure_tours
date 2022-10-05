@@ -19,18 +19,30 @@ def filter_route(request, route_type=None, country=None, location=None):
         query_filter['location'] = location
 
     result = models.Route.objects.all().filter(**query_filter)
-    return render(request, 'route/filter_route.html', {'result': result})
+    if result.exists():
+        return render(request, 'route/filter_route.html', {'result': result})
+    else:
+        result = 'Does not exist'
+        return render(request, 'route/does_not_exist.html', {'result': result})
 
 
 def info(request, route_id):
     result = models.Route.objects.filter(pk=route_id)
-    future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
-    return render(request, 'route/info.html', {'result': result, 'future_events': future_events})
+    if result.exists():
+        future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
+        return render(request, 'route/info.html', {'result': result, 'future_events': future_events})
+    else:
+        result = 'Route does not exist'
+        return render(request, 'route/does_not_exist.html', {'result': result})
 
 
 def review(request, route_id):
     result = models.Review.objects.all().filter(route_id=route_id)
-    return render(request, 'route/review.html', {'result': result})
+    if result.exists():
+        return render(request, 'route/review.html', {'result': result})
+    else:
+        result = 'Reviews do not exist'
+        return render(request, 'route/does_not_exist.html', {'result': result})
 
 
 def add_route(request):
@@ -71,7 +83,11 @@ def add_event(request, route_id):
 
 def event(request, route_id):
     result = models.Event.objects.all().filter(route_id=route_id, start_date__gte=datetime.date.today())
-    return render(request, 'route/event.html', {"result": result})
+    if result.exists():
+        return render(request, 'route/event.html', {"result": result})
+    else:
+        result = 'Events do not exist'
+        return render(request, 'route/does_not_exist.html', {'result': result})
 
 
 def login(request):
