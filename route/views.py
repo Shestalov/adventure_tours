@@ -70,7 +70,7 @@ def add_event(request, route_id):
 
 
 def event(request, route_id):
-    result = models.Event.objects.all().filter(route_id=route_id)
+    result = models.Event.objects.all().filter(route_id=route_id, start_date__gte=datetime.date.today())
     return render(request, 'route/event.html', {"result": result})
 
 
