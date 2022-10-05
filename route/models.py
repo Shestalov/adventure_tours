@@ -4,7 +4,13 @@ from django.utils.translation import gettext_lazy
 
 class Place(models.Model):
     name = models.CharField(max_length=50)
-    info = models.TextField(max_length=255)
+
+    def __str__(self):
+        return f'{self.id} {self.name}'
+
+    class Meta:
+        verbose_name = 'Place'
+        verbose_name_plural = 'Places'
 
 
 class Route(models.Model):
@@ -12,6 +18,7 @@ class Route(models.Model):
         bicycle_route = 'bicycle', gettext_lazy('bicycle')
         hiking_route = 'hiking', gettext_lazy('hiking')
 
+    route_name = models.CharField(max_length=255, null=True)
     route_type = models.CharField(max_length=50, choices=RouteType.choices, default=RouteType.hiking_route)
     departure = models.IntegerField()
     stopping = models.JSONField()
@@ -30,7 +37,7 @@ class Route(models.Model):
 
 
 class Event(models.Model):
-    route = models.ForeignKey(Route, on_delete=models.CASCADE)
+    route = models.ForeignKey(Route, on_delete=models.CASCADE, null=True)
     event_admin = models.IntegerField()
     approved_users = models.JSONField()
     pending_users = models.JSONField()
@@ -46,7 +53,6 @@ class Event(models.Model):
 
 
 class Review(models.Model):
-
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
     route_review = models.TextField()
     route_rate = models.IntegerField()
