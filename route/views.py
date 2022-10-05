@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from . import models
+import datetime
 
 
 # temporary, main page adventure tours
@@ -22,8 +23,9 @@ def filter_route(request, route_type=None, country=None, location=None):
 
 
 def info(request, route_id):
-    result = models.Route.objects.filter(pk=route_id).all()
-    return render(request, 'route/info.html', {'result': result})
+    result = models.Route.objects.filter(pk=route_id)
+    future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
+    return render(request, 'route/info.html', {'result': result, 'future_events': future_events})
 
 
 def review(request, route_id):
@@ -58,7 +60,7 @@ def add_event(request, route_id):
     if request.method == 'GET':
         return render(request, 'route/add_event.html')
     if request.method == 'POST':
-        route_id = request.POST.get('route_id')
+        route_id = route_id  # request.POST.get('route_id')
         start_date = request.POST.get('start_date')
         price = request.POST.get('price')
         new_event = models.Event(route_id=route_id, start_date=start_date, price=price, event_admin=1,
@@ -70,3 +72,11 @@ def add_event(request, route_id):
 def event(request, route_id):
     result = models.Event.objects.all().filter(route_id=route_id)
     return render(request, 'route/event.html', {"result": result})
+
+
+def login(request):
+    pass
+
+
+def logout(request):
+    pass
