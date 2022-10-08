@@ -1,0 +1,31 @@
+{% extends 'route/layout.html' %}
+
+{% block title %}Login{% endblock %}
+
+
+{% block content %}
+    <br>
+    <h1 class="text-center">Login</h1>
+    <br>
+    <form action="#" method="POST" class="container" style="width: 300px;">
+        {% csrf_token %}
+        <!-- Username input -->
+        <div class="form-floating">
+            <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
+            <label for="username">Username</label>
+        </div>
+        <br>
+        <!-- Password input -->
+        <div class="form-floating">
+            <input type="password" class="form-control" name="password" id="password"
+                   placeholder="Enter password" required>
+            <label for="password">Password</label>
+        </div>
+        <br>
+        <!-- Submit button -->
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+    </form>
+    <br>
+    <!-- If the username or password is wrong -->
+    <h4 class="text-center">{{ account_message }}</h4>
+{% endblock %}

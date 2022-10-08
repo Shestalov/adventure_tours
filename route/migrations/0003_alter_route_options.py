@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='route',
-            options={'verbose_name': 'route', 'verbose_name_plural': 'routes'},
+            options={'verbose_name': 'route', 'verbose_name_plural': 'route'},
         ),
     ]

@@ -1,0 +1,27 @@
+{% extends 'route/layout.html' %}
+
+{% block title %}Add review{% endblock %}
+
+{% block content %}
+    <form action="add_review" method="POST" class="w-50 m-auto">
+        {% csrf_token %}
+
+        <h1 class="text-center">Please add your review</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" name="route_review" id="route_review" placeholder="Enter review"
+                   required>
+            <label for="route_review">Route review</label>
+        </div>
+        <br>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" name="route_rate" id="route_rate" placeholder="Enter rate"
+                   required>
+            <label for="route_rate">Rate</label>
+        </div>
+        <br>
+
+        <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+    </form>
+{% endblock %}
