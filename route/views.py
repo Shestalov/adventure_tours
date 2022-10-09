@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from . import models
 import datetime
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 # temporary, main page adventure tours
@@ -9,7 +10,18 @@ def index(request):
     return render(request, 'route/index.html')
 
 
+# def discover(request):
+#     if request.method == 'GET':
+#         uniq_routes_type = models.Route.objects.values('route_type').distinct()
+#         return render(request, 'route/discover.html', {'route_type': uniq_routes_type})
+#     if request.method == 'POST':
+#         route_type = request.POST.get('route_type')
+#         country = request.POST.get('country')
+#         return filter_route(request, route_type=route_type, country=country, location=None)
+
+
 def filter_route(request, route_type=None, country=None, location=None):
+
     query_filter = {}
 
     if route_type is not None:
@@ -75,9 +87,11 @@ def add_route(request):
                                      destination=destination_obj.id, route_name=route_name, country=country,
                                      location=location, description=description, duration=duration)
             new_route.save()
+            messages.success(request, "Route was added")
             return redirect('home')
     else:
-        return redirect('account:login')
+        messages.error(request, "User does not have permission!")
+        return redirect('home')
 
 
 @login_required(login_url='account:login')
@@ -93,8 +107,10 @@ def add_event(request, route_id):
             new_event = models.Event(route_id=route_id, start_date=start_date, price=price, event_admin=1,
                                      approved_users={'test': 'test'}, pending_users={'test': 'test'})
             new_event.save()
+            messages.success(request, "Event was added")
             return redirect('home')
     else:
+        messages.error(request, "User does not have permission!")
         return redirect('account:login')
 
 
@@ -109,6 +125,8 @@ def add_review(request, route_id):
             route_rate = request.POST.get('route_rate')
             new_event = models.Review(route_review=route_review, route_rate=route_rate, route_id_id=route_id)
             new_event.save()
+            messages.success(request, "Review was added")
             return redirect('home')
     else:
+        messages.error(request, "User does not have permission!")
         return redirect('account:login')

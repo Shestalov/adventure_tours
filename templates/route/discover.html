@@ -1,0 +1,35 @@
+{% extends 'route/layout.html' %}
+
+{% block title %}Main page{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Discover</h1>
+    <h1 class="text-center">Find your route</h1>
+    <br>
+    <form action="{% url 'route:discover' %}" method="POST" class="container">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-lg-2 col-sm-4">
+                <select class="form-select" aria-label="Default select example" id="route_type" name="route_type"
+                        required>
+                    {% for type in route_type %}
+                        <option value="" disabled selected hidden>Choose a sport</option>
+                        <option value="{{ type.route_type }}">{{ type.route_type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-6 col-sm-7 d-flex">
+                <input class="form-control me-2" type="text" name="country" placeholder="County" aria-label="country">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+    <br>
+
+    <style>
+        select:invalid {
+            color: gray;
+        }
+    </style>
+
+{% endblock %}

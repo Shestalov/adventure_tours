@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def user_login(request):
@@ -15,17 +17,23 @@ def user_login(request):
                 login(request, user)
                 return redirect('home')
             else:
-                return render(request, 'account/login.html', {'account_message': 'Wrong username or password'})
+                messages.error(request, 'Wrong username or password')
+                return redirect('account:login')
     else:
-        return render(request, 'route/index.html', {'account_message': 'You are already logged in!'})
+        messages.error(request, 'You are already logged in!')
+        return redirect('home')
+        # return render(request, 'route/index.html', {'account_message': 'You are already logged in!'})
 
 
+# @login_required(login_url='account:login')
 def user_logout(request):
     if request.user.is_authenticated:
         logout(request)
         return render(request, 'account/logout.html')
     else:
-        return render(request, 'route/index.html', {'account_message': 'You are already logged out!'})
+        messages.error(request, 'You are already logged out!')
+        return redirect('account:login')
+        # return render(request, 'route/index.html', {'account_message': 'You are already logged out!'})
 
 
 def user_registration(request):
@@ -36,8 +44,11 @@ def user_registration(request):
             username = request.POST['username']
             email = request.POST['email']
             password = request.POST['password']
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username or None, email=email or None, password=password or None)
             user.save()
-            return redirect('home')
+            messages.success(request, 'Your account was created')
+            return redirect('account:login')
     else:
-        return render(request, 'route/index.html', {'account_message': 'Your account is already created!'})
+        messages.error(request, 'Your account is already created!')
+        return redirect('home')
+        # return render(request, 'route/index.html', {'account_message': 'Your account is already created!'})

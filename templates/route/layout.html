@@ -19,8 +19,8 @@
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
             <li><a href="{% url 'route:add_route' %}" class="nav-link px-2 link-secondary">Add route</a></li>
-            <li><a href="{% url 'route:all_routes' %}" class="nav-link px-2 link-secondary">All routes</a></li>
-            <li><a href="#" class="nav-link px-2 link-danger">Plug</a></li>
+            <li><a href="{% url 'route:all_routes' %}" class="nav-link px-2 link-success">All routes</a></li>
+            {#            <li><a href="{% url 'route:discover' %}" class="nav-link px-2 link-success">Discover</a></li>#}
         </ul>
 
         <div class="col-md-3 text-end">
@@ -34,7 +34,23 @@
     </header>
 </div>
 
-{% block content %}{% endblock %}
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</div>
+
 
 </body>
 </html>
