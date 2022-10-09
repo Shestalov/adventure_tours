@@ -54,30 +54,33 @@ def event(request, route_id):
 
 @login_required(login_url='account:login')
 def add_route(request):
-    if request.method == 'GET':
-        return render(request, 'route/add_route.html')
+    if request.user.has_perm('route.add_route'):
+        if request.method == 'GET':
+            return render(request, 'route/add_route.html')
 
-    if request.method == 'POST':
-        route_type = request.POST.get('route_type')
-        departure = request.POST.get('departure')
-        destination = request.POST.get('destination')
-        country = request.POST.get('country')
-        location = request.POST.get('location')
-        description = request.POST.get('description')
-        duration = request.POST.get('duration')
-        route_name = request.POST.get('route_name')
+        if request.method == 'POST':
+            route_type = request.POST.get('route_type')
+            departure = request.POST.get('departure')
+            destination = request.POST.get('destination')
+            country = request.POST.get('country')
+            location = request.POST.get('location')
+            description = request.POST.get('description')
+            duration = request.POST.get('duration')
+            route_name = request.POST.get('route_name')
 
-        departure_obj = models.Place.objects.get(name=departure)
-        destination_obj = models.Place.objects.get(name=destination)
+            departure_obj = models.Place.objects.get(name=departure)
+            destination_obj = models.Place.objects.get(name=destination)
 
-        new_route = models.Route(route_type=route_type, departure=departure_obj.id, stopping={'test': 'test'},
-                                 destination=destination_obj.id, route_name=route_name, country=country,
-                                 location=location, description=description, duration=duration)
-        new_route.save()
-        return redirect('home')
+            new_route = models.Route(route_type=route_type, departure=departure_obj.id, stopping={'test': 'test'},
+                                     destination=destination_obj.id, route_name=route_name, country=country,
+                                     location=location, description=description, duration=duration)
+            new_route.save()
+            return redirect('home')
+    else:
+        return redirect('account:login')
 
 
-# @login_required(login_url='account:login')
+@login_required(login_url='account:login')
 def add_event(request, route_id):
     if request.user.has_perm('route.add_event'):
         if request.method == 'GET':
@@ -97,12 +100,15 @@ def add_event(request, route_id):
 
 @login_required(login_url='account:login')
 def add_review(request, route_id):
-    if request.method == 'GET':
-        return render(request, 'route/add_review.html')
-    if request.method == 'POST':
-        route_id = route_id
-        route_review = request.POST.get('route_review')
-        route_rate = request.POST.get('route_rate')
-        new_event = models.Review(route_review=route_review, route_rate=route_rate, route_id_id=route_id)
-        new_event.save()
-        return redirect('home')
+    if request.user.has_perm('route.add_review'):
+        if request.method == 'GET':
+            return render(request, 'route/add_review.html')
+        if request.method == 'POST':
+            route_id = route_id
+            route_review = request.POST.get('route_review')
+            route_rate = request.POST.get('route_rate')
+            new_event = models.Review(route_review=route_review, route_rate=route_rate, route_id_id=route_id)
+            new_event.save()
+            return redirect('home')
+    else:
+        return redirect('account:login')
