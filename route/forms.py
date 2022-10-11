@@ -2,6 +2,7 @@ from .models import Review
 from django.forms import ModelForm, TextInput, NumberInput, Textarea
 
 
+# the form is related to the model
 class AddReviewForm(ModelForm):
     class Meta:
         model = Review
