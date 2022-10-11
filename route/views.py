@@ -222,12 +222,18 @@ def add_review(request, route_id):
         return redirect('home')
 
 
+@login_required(login_url='account:login')
 def test_page(request):
-    if request.method == 'POST':
-        form = AddReviewForm(request.POST)
-        if form.is_valid():
-            route = form.save()
-            return redirect('home')
+    if request.user.has_perm('route.add_review'):
+        if request.method == 'POST':
+            form = AddReviewForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Review was added")
+                return redirect('home')
+        else:
+            form = AddReviewForm()
+        return render(request, 'route/test_page.html', {'form': form})
     else:
-        form = AddReviewForm()
-    return render(request, 'route/test_page.html', {'form': form})
+        messages.error(request, "User does not have permission!")
+        return redirect('home')
