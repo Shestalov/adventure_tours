@@ -4,6 +4,7 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import connection
+from .forms import AddReviewForm
 
 
 # temporary, main page adventure tours
@@ -170,12 +171,14 @@ def add_route(request):
             departure_obj = models.Place.objects.get(name=departure)
             destination_obj = models.Place.objects.get(name=destination)
 
-            new_route = models.Route(route_type=route_type, departure=departure_obj.id, stopping={'test': 'test'},
-                                     destination=destination_obj.id, route_name=route_name, country=country,
-                                     location=location, description=description, duration=duration)
+            new_route = models.Route.objects.create(route_type=route_type, departure=departure_obj.id,
+                                                    stopping={'test': 'test'},
+                                                    destination=destination_obj.id, route_name=route_name,
+                                                    country=country,
+                                                    location=location, description=description, duration=duration)
             new_route.save()
             messages.success(request, "Route was added")
-            return redirect('home')
+            return redirect(new_route)
     else:
         messages.error(request, "User does not have permission!")
         return redirect('home')
@@ -217,3 +220,14 @@ def add_review(request, route_id):
     else:
         messages.error(request, "User does not have permission!")
         return redirect('home')
+
+
+def test_page(request):
+    if request.method == 'POST':
+        form = AddReviewForm(request.POST)
+        if form.is_valid():
+            route = form.save()
+            return redirect('home')
+    else:
+        form = AddReviewForm()
+    return render(request, 'route/test_page.html', {'form': form})
