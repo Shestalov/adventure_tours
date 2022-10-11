@@ -58,7 +58,7 @@ def filter_route(request, route_type=None, country=None, location=None):
 
 def route_info(request, route_id):
     # foreignkey
-    result = models.Route.objects.filter(pk=route_id)
+    # result = models.Route.objects.filter(pk=route_id)
 
     # raw query
     cursor = connection.cursor()
