@@ -34,9 +34,8 @@ def filter_route(request, route_type=None, country=None, location=None):
 
     filter_string = ' and '.join(query_filter)
 
-    joining = """SELECT route_route.route_name, route_route.route_type, 
-                        route_route.country, route_route.location,
-                        route_route.departure, route_route.destination, 
+    joining = """SELECT route_route.route_name, route_route.route_type, route_route.country, 
+                        route_route.location, start.name  AS departure, finish.name AS destination,
                         route_route.description, route_route.duration
                     FROM route_route 
                     JOIN route_place as start 
@@ -115,13 +114,24 @@ def event(request, route_id):
 
     # raw query
     cursor = connection.cursor()
-    raw_query = f"""SELECT route_route.route_type, route_event.event_admin, route_event.approved_users,
-                            route_event.start_date, route_event.price, 
-                            route_route.country, route_route.location,
-                            route_route.departure, route_route.destination,
-                            route_route.duration, route_route.route_name
-                            FROM route_event JOIN route_route
-                            ON route_event.route_id = route_route.id 
+    raw_query = f"""SELECT route_route.route_type, 
+                            route_event.event_admin, 
+                            route_event.approved_users,
+                            route_event.start_date, 
+                            route_event.price, 
+                            route_route.country, 
+                            route_route.location,
+                            start.name  AS departure, 
+                            finish.name AS destination,
+                            route_route.duration, 
+                            route_route.route_name
+                            FROM route_event
+                                 JOIN route_route
+                                      ON route_event.route_id = route_route.id
+                                 JOIN route_place as start
+                                      ON start.id = route_route.departure
+                                 JOIN route_place AS finish
+                                      ON finish.id = route_route.destination
                             WHERE route_id='{route_id}' AND route_event.start_date >= '{datetime.date.today()}';"""
 
     cursor.execute(raw_query)
