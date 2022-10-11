@@ -3,38 +3,57 @@
 {% block title %}Route info{% endblock %}
 
 {% block content %}
+    {#    <ul>#}
+    {#        {% for itm in result %}#}
+    {#            <li>#}
+    {#                {#}
+    {#                "route_name": "{{ itm.route_name }}",#}
+    {#                "route_type": "{{ itm.route_type }}",#}
+    {#                "departure": "{{ itm.departure }}",#}
+    {#                "destination": "{{ itm.destination }}",#}
+    {#                "country": "{{ itm.country }}",#}
+    {#                "location": "{{ itm.location }}",#}
+    {#                "description": "{{ itm.description }}",#}
+    {#                "duration": "{{ itm.duration }}",#}
+    {#                "number_of_events" : "{{ itm.event_set.count }}",#}
+    {#                "all_events" : {#}
+    {#                {% for i in itm.event_set.all %}#}
+    {#                    "event_{{ forloop.counter }}": "{{ i.start_date }}"#}
+    {#                    {% if forloop.counter  < itm.event_set.all|length %}#}
+    {#                        ,#}
+    {#                    {% endif %}#}
+    {#                {% endfor %}#}
+    {#                } , "future_events": {#}
+    {##}
+    {#                {% for itm in future_events %}#}
+    {#                    "event_{{ forloop.counter }}" : "{{ itm.start_date }}",#}
+    {#                    {% if forloop.counter  < itm.event_set.all|length %}#}
+    {#                        ,#}
+    {#                    {% endif %}#}
+    {#                {% endfor %}#}
+    {#                }#}
+    {#                }#}
+    {#            </li>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+
     <ul>
         {% for itm in result %}
             <li>
                 {
                 "route_name": "{{ itm.route_name }}",
                 "route_type": "{{ itm.route_type }}",
-                "departure": "{{ itm.departure }}",
-                "destination": "{{ itm.destination }}",
                 "country": "{{ itm.country }}",
                 "location": "{{ itm.location }}",
                 "description": "{{ itm.description }}",
                 "duration": "{{ itm.duration }}",
-                "number_of_events" : "{{ itm.event_set.count }}",
-                "all_events" : {
-                {% for i in itm.event_set.all %}
-                    "event_{{ forloop.counter }}": "{{ i.start_date }}"
-                    {% if forloop.counter  < itm.event_set.all|length %}
-                        ,
-                    {% endif %}
-                {% endfor %}
-                } , "future_events": {
-
-                {% for itm in future_events %}
-                    "event_{{ forloop.counter }}" : "{{ itm.start_date }}",
-                    {% if forloop.counter  < itm.event_set.all|length %}
-                        ,
-                    {% endif %}
-                {% endfor %}
-                }
+                "departure" : "{{ itm.departure }}",
+                "avg_rate": "{{ itm.avg_rate }}",
+                "events": "{{ itm.events }}"
                 }
             </li>
         {% endfor %}
     </ul>
+
 
 {% endblock %}

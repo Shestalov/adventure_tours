@@ -6,9 +6,10 @@
     <ul>
         {% for itm in result %}
             <li>
-                {"route_type": "{{ itm.route_type }}", "country": "{{ itm.country }}","location":
-                "{{ itm.location }}", "description": "{{ itm.description }}", "duration": "{{ itm.duration }}",
-                "departure", "{{ itm.departure }}", "destination": "{{ itm.destination }}"}
+                {"route_type": "{{ itm.route_type }}", "country": "{{ itm.country }}",
+                "location": "{{ itm.location }}", "description": "{{ itm.description }}",
+                "duration": "{{ itm.duration }}","departure", "{{ itm.departure }}",
+                "destination": "{{ itm.destination }}", "route_name": "{{ itm.route_name }}"}
             </li>
         {% endfor %}
     </ul>

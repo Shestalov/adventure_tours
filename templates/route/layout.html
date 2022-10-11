@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
             crossorigin="anonymous"></script>
-    {% block head %}{% endblock %}
+    {% block head %}{% endblock %} {# for datepicker #}
 </head>
 <body>
 
@@ -19,8 +19,8 @@
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
             <li><a href="{% url 'route:add_route' %}" class="nav-link px-2 link-secondary">Add route</a></li>
-            <li><a href="{% url 'route:all_routes' %}" class="nav-link px-2 link-success">All routes</a></li>
-            {#            <li><a href="{% url 'route:discover' %}" class="nav-link px-2 link-success">Discover</a></li>#}
+            <li><a href="{% url 'route:discover' %}" class="nav-link px-2 link-success">Discover</a></li>
+            {# <li><a href="{% url 'route:discover' %}" class="nav-link px-2 link-success">Discover</a></li> #}
         </ul>
 
         <div class="col-md-3 text-end">
@@ -48,9 +48,9 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+
     {% block content %}{% endblock %}
 </div>
-
 
 </body>
 </html>

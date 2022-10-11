@@ -3,12 +3,28 @@
 {% block title %}Events{% endblock %}
 
 {% block content %}
+    {# for foreign key #}
+{#    <ul>#}
+{#        {% for itm in result %}#}
+{#            <li>#}
+{#                {"event_admin": "{{ itm.event_admin }}", "approved_users": "{{ itm.approved_users }}",#}
+{#                "start_date": "{{ itm.start_date }}", "price": "{{ itm.price }}",#}
+{#                "country": "{{ itm.route.country }}", "location": "{{ itm.route.location }}",#}
+{#                "departure": "{{ itm.route.departure }}", "destination": "{{ itm.route.destination }}", }#}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+
+    {# for raw query #}
     <ul>
         {% for itm in result %}
             <li>
-                {"id": "{{ itm.id }}", "event_admin": "{{ itm.event_admin }}",
+                {"route_type": "{{ itm.route_type }}", "event_admin": "{{ itm.event_admin }}",
                 "approved_users": "{{ itm.approved_users }}", "start_date": "{{ itm.start_date }}",
-                "price": "{{ itm.price }}"}
+                "price": "{{ itm.price }}","country", "{{ itm.country }}",
+                "location": "{{ itm.location }}", "departure": "{{ itm.departure }}",
+                "destination": "{{ itm.destination }}", "duration": "{{ itm.duration }}",
+                "route_name": "{{ itm.route_name }}"}
             </li>
         {% endfor %}
     </ul>

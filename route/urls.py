@@ -4,7 +4,7 @@ from . import views
 app_name = 'route'
 
 urlpatterns = [
-    path('', views.filter_route, name='all_routes'),
+    path('', views.discover, name='discover'),
     path('<str:route_type>/', views.filter_route, name='route_type'),
     path('<str:route_type>/<str:country>/', views.filter_route, name='route_country'),
     path('<str:route_type>/<str:country>/<str:location>/', views.filter_route, name='route_location'),
