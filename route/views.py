@@ -94,7 +94,7 @@ def route_info(request, route_id):
     # if django orm - if result.exists():
     # AND comment/uncomment template
     # + , 'future_events': future_events} to result dict
-    if result is not None:
+    if result[0]['route_name'] is not None:
         # future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
         return render(request, 'route/route_info.html', {'result': result})
     else:
