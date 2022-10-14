@@ -71,7 +71,7 @@ def route_info(request, route_id):
                             start.name                     AS departure,
                             finish.name                    AS destination,
                             ROUND(AVG(rate.route_rate), 0) AS avg_rate,
-                            COUNT(route_event.start_date)/3  AS events
+                            COUNT(DISTINCT route_event.start_date)  AS events
                             FROM route_route
                                      JOIN route_place AS start
                                           ON start.id = route_route.departure
@@ -89,16 +89,16 @@ def route_info(request, route_id):
     result = [{'route_name': itm[0], 'route_type': itm[1], 'country': itm[2], 'location': itm[3],
                'description': itm[4], 'duration': itm[5], 'departure': itm[6], 'destination': itm[7],
                'avg_rate': itm[8], 'events': itm[9]} for itm in row]
-
+    return render(request, 'route/route_info.html', {'result': result})
     # if raw query use - if result is not None:
     # if django orm - if result.exists():
     # AND comment/uncomment template
     # + , 'future_events': future_events} to result dict
-    if result[0]['route_name'] is not None:
-        # future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
-        return render(request, 'route/route_info.html', {'result': result})
-    else:
-        return render(request, 'route/does_not_exist.html', {'result': 'Route does not exist'})
+    # if result[0]['route_name'] is not None:
+    #     # future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
+    #     return render(request, 'route/route_info.html', {'result': result})
+    # else:
+    #     return render(request, 'route/does_not_exist.html', {'result': 'Route does not exist'})
 
 
 def review(request, route_id):
