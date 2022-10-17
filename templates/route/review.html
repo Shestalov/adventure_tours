@@ -1,13 +1,22 @@
-{% extends 'route/layout.html' %}
+{% extends 'main/layout.html' %}
 
 {% block title %}Review{% endblock %}
 
 {% block content %}
-    <ul>
-        {% for itm in result %}
-            <li>{"route_id": "{{ itm.route_id }}", "route_review": "{{ itm.route_review }}","route_rate":
-                "{{ itm.route_rate }}"}
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="row">
+            <ul class="list-group">
+{#                {% if result %}#}
+                    {% for itm in result %}
+                        <li class="list-group-item d-flex justify-content-center align-items-center rounded">
+                            "route_review": "{{ itm.route_review }}",
+                            "route_rate": "{{ itm.route_rate }}"}
+                        </li><br>
+                    {% endfor %}
+{#                {% else %}#}
+{#                    <h3>Review does not exist (template)</h3>#}
+{#                {% endif %}#}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

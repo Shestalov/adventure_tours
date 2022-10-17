@@ -1,60 +1,45 @@
-{% extends 'route/layout.html' %}
+{% extends 'main/layout.html' %}
 
 {% block title %}Route info{% endblock %}
 
 {% block content %}
-    {#    <ul>#}
-    {#        {% for itm in result %}#}
-    {#            <li>#}
-    {#                {#}
-    {#                "route_name": "{{ itm.route_name }}",#}
-    {#                "route_type": "{{ itm.route_type }}",#}
-    {#                "departure": "{{ itm.departure }}",#}
-    {#                "destination": "{{ itm.destination }}",#}
-    {#                "country": "{{ itm.country }}",#}
-    {#                "location": "{{ itm.location }}",#}
-    {#                "description": "{{ itm.description }}",#}
-    {#                "duration": "{{ itm.duration }}",#}
-    {#                "number_of_events" : "{{ itm.event_set.count }}",#}
-    {#                "all_events" : {#}
-    {#                {% for i in itm.event_set.all %}#}
-    {#                    "event_{{ forloop.counter }}": "{{ i.start_date }}"#}
-    {#                    {% if forloop.counter  < itm.event_set.all|length %}#}
-    {#                        ,#}
-    {#                    {% endif %}#}
-    {#                {% endfor %}#}
-    {#                } , "future_events": {#}
-    {##}
-    {#                {% for itm in future_events %}#}
-    {#                    "event_{{ forloop.counter }}" : "{{ itm.start_date }}",#}
-    {#                    {% if forloop.counter  < itm.event_set.all|length %}#}
-    {#                        ,#}
-    {#                    {% endif %}#}
-    {#                {% endfor %}#}
-    {#                }#}
-    {#                }#}
-    {#            </li>#}
-    {#        {% endfor %}#}
-    {#    </ul>#}
+    <div class="container">
+        <div class="row">
+            <ul class="list-group">
+                {% if result %}
+                    {% for itm in result %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center rounded">
+                            {
+                            "route_name": "{{ itm.route_name }}",
+                            "route_type": "{{ itm.route_type }}",
+                            "country": "{{ itm.country }}",
+                            "location": "{{ itm.location }}",
+                            "description": "{{ itm.description }}",
+                            "duration": "{{ itm.duration }}",
+                            "stopping": "{{ itm.stopping }}",
+                            "departure" : "{{ itm.departure }}",
+                            "destination" : "{{ itm.destination }}",
+                            "stopping": "{{ stopping }}"
 
-    <ul>
-        {% for itm in result %}
-            <li>
-                {
-                "route_name": "{{ itm.route_name }}",
-                "route_type": "{{ itm.route_type }}",
-                "country": "{{ itm.country }}",
-                "location": "{{ itm.location }}",
-                "description": "{{ itm.description }}",
-                "duration": "{{ itm.duration }}",
-                "departure" : "{{ itm.departure }}",
-                "destination" : "{{ itm.destination }}",
-                "avg_rate": "{{ itm.avg_rate }}",
-                "events": "{{ itm.events }}"
-                }
-            </li>
-        {% endfor %}
-    </ul>
-
-
+                            <a href="{% url 'route:add_event' itm.route_id %}"
+                               class="btn btn-sm btn-warning flex-shrink-0 me-2">Add event</a>
+                            {% if event %}
+                                <a href="{% url 'route:event' itm.route_id %}"
+                                   class="btn btn-sm btn-warning flex-shrink-0 me-2">Events</a>
+                            {% endif %}
+                            <a href="{% url 'route:add_review' itm.route_id %}"
+                               class="btn btn-sm btn-warning flex-shrink-0 me-2">Add review</a>
+                            {% if review %}
+                                <a href="{% url 'route:review' itm.route_id %}"
+                                   class="btn btn-sm btn-warning flex-shrink-0 me-2">Review</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <h3 class="text-center">Does not exist (temp)</h3>
+                {% endif %}
+            </ul>
+            <br>
+        </div>
+    </div>
 {% endblock %}

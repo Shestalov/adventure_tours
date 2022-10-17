@@ -15,13 +15,13 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')
+                return redirect('main:home')
             else:
                 messages.error(request, 'Wrong username or password')
                 return redirect('account:login')
     else:
         messages.error(request, 'You are already logged in!')
-        return redirect('home')
+        return redirect('main:home')
         # return render(request, 'route/index.html', {'account_message': 'You are already logged in!'})
 
 
@@ -50,5 +50,5 @@ def user_registration(request):
             return redirect('account:login')
     else:
         messages.error(request, 'Your account is already created!')
-        return redirect('home')
+        return redirect('main:home')
         # return render(request, 'route/index.html', {'account_message': 'Your account is already created!'})

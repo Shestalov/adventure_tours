@@ -1,16 +1,26 @@
-{% extends 'route/layout.html' %}
+{% extends 'main/layout.html' %}
 
-{% block title %}Filter routes{% endblock %}
+{% block title %}Discover{% endblock %}
 
 {% block content %}
-    <ul>
-        {% for itm in result %}
-            <li>
-                {"route_type": "{{ itm.route_type }}", "country": "{{ itm.country }}",
-                "location": "{{ itm.location }}", "description": "{{ itm.description }}",
-                "duration": "{{ itm.duration }}","departure", "{{ itm.departure }}",
-                "destination": "{{ itm.destination }}", "route_name": "{{ itm.route_name }}"}
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="row">
+            <ul class="list-group">
+            {% if result %}
+                {% for itm in result %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center rounded">
+                        {"route_type": "{{ itm.route_type }}", "country": "{{ itm.country }}",
+                        "location": "{{ itm.location }}", "description": "{{ itm.description }}",
+                        "duration": "{{ itm.duration }}","departure", "{{ itm.departure }}",
+                        "destination": "{{ itm.destination }}", "route_name": "{{ itm.route_name }}"}
+                        <a href="{% url 'route:info' itm.route_id %}" class="btn btn-sm btn-info">Info</a>
+                    </li>
+                    <br>
+                {% endfor %}
+            {% else %}
+                <h3 class="text-center">Does not exist (templ)</h3>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

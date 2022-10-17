@@ -21,7 +21,7 @@ class Route(models.Model):
     route_name = models.CharField(max_length=255, null=True)
     route_type = models.CharField(max_length=50, choices=RouteType.choices, default=RouteType.hiking_route)
     departure = models.IntegerField()
-    stopping = models.JSONField()
+    stopping = models.CharField(max_length=50, null=True)
     destination = models.IntegerField()
     country = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
@@ -39,8 +39,7 @@ class Route(models.Model):
 class Event(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE, null=True)
     event_admin = models.IntegerField()
-    approved_users = models.JSONField()
-    pending_users = models.JSONField()
+    event_users = models.CharField(max_length=50, null=True)
     start_date = models.DateField()
     price = models.IntegerField()
 

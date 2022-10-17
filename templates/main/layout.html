@@ -17,10 +17,9 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="{% url 'route:add_route' %}" class="nav-link px-2 link-secondary">Add route</a></li>
+            <li><a href="{% url 'main:home' %}" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="{% url 'route:add_route' %}" class="nav-link px-2 link-danger">Add route</a></li>
             <li><a href="{% url 'route:discover' %}" class="nav-link px-2 link-success">Discover</a></li>
-             <li><a href="{% url 'route:test_page' %}" class="nav-link px-2 link-danger">Add review</a></li>
         </ul>
 
         <div class="col-md-3 text-end">
@@ -48,9 +47,9 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-
-    {% block content %}{% endblock %}
 </div>
+
+{% block content %}{% endblock %}
 
 </body>
 </html>

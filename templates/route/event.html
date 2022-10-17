@@ -1,31 +1,26 @@
-{% extends 'route/layout.html' %}
+{% extends 'main/layout.html' %}
 
 {% block title %}Events{% endblock %}
 
 {% block content %}
-    {# for foreign key #}
-{#    <ul>#}
-{#        {% for itm in result %}#}
-{#            <li>#}
-{#                {"event_admin": "{{ itm.event_admin }}", "approved_users": "{{ itm.approved_users }}",#}
-{#                "start_date": "{{ itm.start_date }}", "price": "{{ itm.price }}",#}
-{#                "country": "{{ itm.route.country }}", "location": "{{ itm.route.location }}",#}
-{#                "departure": "{{ itm.route.departure }}", "destination": "{{ itm.route.destination }}", }#}
-{#            </li>#}
-{#        {% endfor %}#}
-{#    </ul>#}
-
-    {# for raw query #}
-    <ul>
-        {% for itm in result %}
-            <li>
-                {"route_type": "{{ itm.route_type }}", "event_admin": "{{ itm.event_admin }}",
-                "approved_users": "{{ itm.approved_users }}", "start_date": "{{ itm.start_date }}",
-                "price": "{{ itm.price }}","country", "{{ itm.country }}",
-                "location": "{{ itm.location }}", "departure": "{{ itm.departure }}",
-                "destination": "{{ itm.destination }}", "duration": "{{ itm.duration }}",
-                "route_name": "{{ itm.route_name }}"}
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="row">
+            <ul class="list-group">
+                {% if result %}
+                    {% for itm in result %}
+                        <li class="list-group-item d-flex justify-content-center align-items-center rounded">
+                            {"route_type": "{{ itm.route_type }}", "event_admin": "{{ itm.event_admin }}",
+                            "start_date": "{{ itm.start_date }}", "price": "{{ itm.price }}",
+                            "country": "{{ itm.country }}", "location": "{{ itm.location }}",
+                            "departure": "{{ itm.departure }}", "destination": "{{ itm.destination }}",
+                            "duration": "{{ itm.duration }}", "route_name": "{{ itm.route_name }}"},
+                            "stopping": "{{ stopping }}"
+                        </li><br>
+                    {% endfor %}
+                {% else %}
+                    <h3 class="text-center">Event does not exist (temp)</h3>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

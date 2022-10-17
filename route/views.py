@@ -5,11 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import connection
 from .forms import AddReviewForm
-
-
-# temporary, main page adventure tours
-def index(request):
-    return render(request, 'route/index.html')
+from utils.mongo_utils import MongoDBConnection
+from bson import ObjectId
 
 
 def discover(request):
@@ -35,70 +32,68 @@ def filter_route(request, route_type=None, country=None, location=None):
 
     filter_string = ' and '.join(query_filter)
 
-    joining = """SELECT route_route.route_name, route_route.route_type, route_route.country, 
-                        route_route.location, start.name  AS departure, finish.name AS destination,
-                        route_route.description, route_route.duration
+    joining = """SELECT route_route.route_name, 
+                        route_route.route_type, 
+                        route_route.country, 
+                        route_route.location, 
+                        start.name  AS departure, 
+                        finish.name AS destination,
+                        route_route.description, 
+                        route_route.duration, 
+                        route_route.id
                     FROM route_route 
                     JOIN route_place as start 
                     ON start.id = route_route.departure 
                     JOIN route_place as finish 
                     ON finish.id = route_route.destination 
-                    WHERE """ + filter_string
+                    WHERE """ + filter_string + """ORDER BY route_route.id DESC"""
 
     cursor.execute(joining)
     result_joining = cursor.fetchall()
     result = [{'route_name': itm[0], 'route_type': itm[1], 'country': itm[2], 'location': itm[3], 'departure': itm[4],
-               'destination': itm[5], 'description': itm[6], 'duration': itm[7]} for itm in result_joining]
+               'destination': itm[5], 'description': itm[6], 'duration': itm[7], 'route_id': itm[8]} for itm in
+              result_joining]
 
-    if result is not None:
-        return render(request, 'route/filter_route.html', {'result': result})
-    else:
-        return render(request, 'route/does_not_exist.html', {'result': 'Does not exist'})
+    return render(request, 'route/filter_route.html', {'result': result})
 
 
 def route_info(request, route_id):
-    # foreignkey
-    # result = models.Route.objects.filter(pk=route_id)
-
-    # raw query
     cursor = connection.cursor()
-    raw_query = f"""SELECT route_route.route_name,
+
+    raw_query_route = f"""SELECT route_route.route_name,
                             route_route.route_type,
                             route_route.country,
                             route_route.location,
                             route_route.description,
                             route_route.duration,
                             start.name                     AS departure,
-                            finish.name                    AS destination,
-                            ROUND(AVG(rate.route_rate), 0) AS avg_rate,
-                            COUNT(DISTINCT route_event.start_date)  AS events
+                            route_route.stopping,
+                            finish.name                    AS destination
                             FROM route_route
                                      JOIN route_place AS start
                                           ON start.id = route_route.departure
                                      JOIN route_place AS finish
                                           ON finish.id = route_route.destination
-                                     JOIN route_review AS rate
-                                          ON rate.route_id_id = route_route.id
-                                     JOIN route_event
-                                          ON route_event.route_id = route_route.id
-                            WHERE route_route.id = '{route_id}'
-                              AND route_event.start_date >= '{datetime.date.today()}';"""
+                            WHERE route_route.id = '{route_id}';"""
 
-    cursor.execute(raw_query)
+    events = models.Event.objects.filter(route_id=route_id).all()
+    reviews = models.Review.objects.filter(route_id_id=route_id).all()
+
+    cursor.execute(raw_query_route)
     row = cursor.fetchall()
     result = [{'route_name': itm[0], 'route_type': itm[1], 'country': itm[2], 'location': itm[3],
-               'description': itm[4], 'duration': itm[5], 'departure': itm[6], 'destination': itm[7],
-               'avg_rate': itm[8], 'events': itm[9]} for itm in row]
-    return render(request, 'route/route_info.html', {'result': result})
-    # if raw query use - if result is not None:
-    # if django orm - if result.exists():
-    # AND comment/uncomment template
-    # + , 'future_events': future_events} to result dict
-    # if result[0]['route_name'] is not None:
-    #     # future_events = result[0].event_set.filter(start_date__gte=datetime.date.today())
-    #     return render(request, 'route/route_info.html', {'result': result})
-    # else:
-    #     return render(request, 'route/does_not_exist.html', {'result': 'Route does not exist'})
+               'description': itm[4], 'duration': itm[5], 'departure': itm[6], 'stopping': itm[7],
+               'destination': itm[8], 'route_id': route_id} for itm in row]
+
+    if result:
+        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+            collection = db['stopping']
+            stopping = collection.find_one({'_id': ObjectId(result[0]['stopping'])})
+    else:
+        stopping = None
+
+    return render(request, 'route/route_info.html',
+                  {'result': result, 'stopping': stopping, 'event': events, 'review': reviews})
 
 
 def review(request, route_id):
@@ -106,23 +101,19 @@ def review(request, route_id):
     if result.exists():
         return render(request, 'route/review.html', {'result': result})
     else:
-        return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist'})
+        return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist (View)'})
 
 
 def event(request, route_id):
-    # foreignkey
-    # result = models.Event.objects.all().filter(route_id=route_id, start_date__gte=datetime.date.today())
-
-    # raw query
     cursor = connection.cursor()
     raw_query = f"""SELECT route_route.route_type, 
-                            route_event.event_admin, 
-                            route_event.approved_users,
+                            route_event.event_admin,
                             route_event.start_date, 
                             route_event.price, 
                             route_route.country, 
                             route_route.location,
                             start.name  AS departure, 
+                            route_route.stopping,
                             finish.name AS destination,
                             route_route.duration, 
                             route_route.route_name
@@ -138,17 +129,18 @@ def event(request, route_id):
     cursor.execute(raw_query)
     row = cursor.fetchall()
 
-    result = [{'route_type': itm[0], 'event_admin': itm[1], 'approved_users': itm[2], 'start_date': itm[3],
-               'price': itm[4], 'country': itm[5], 'location': itm[6], 'departure': itm[7],
-               'destination': itm[8], 'duration': itm[9], 'route_name': itm[10]} for itm in row]
+    result = [{'route_type': itm[0], 'event_admin': itm[1], 'start_date': itm[2],
+               'price': itm[3], 'country': itm[4], 'location': itm[5], 'departure': itm[6],
+               'stopping': itm[7], 'destination': itm[8], 'duration': itm[9], 'route_name': itm[10]} for itm in row]
 
-    # if raw query use - if result is not None:
-    # if django orm - if result.exists():
-    # AND comment/uncomment template
-    if result is not None:
-        return render(request, 'route/event.html', {"result": result})
+    if result:
+        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+            collection = db['stopping']
+            stopping = collection.find_one({'_id': ObjectId(result[0]['stopping'])})
     else:
-        return render(request, 'route/does_not_exist.html', {'result': 'Events do not exist'})
+        stopping = None
+
+    return render(request, 'route/event.html', {'result': result, 'stopping': stopping})
 
 
 @login_required(login_url='account:login')
