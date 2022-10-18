@@ -4,7 +4,7 @@
 
 
 {% block content %}
-    <br>
+    <br xmlns="http://www.w3.org/1999/html">
     <h1 class="text-center">Registration</h1>
     <br>
     <form action="#" method="POST" class="container" style="width: 300px;">
@@ -26,10 +26,15 @@
         <div class="form-floating">
             <input type="password" class="form-control" name="password" id="password"
                    placeholder="Enter password" required>
-            <label for="password">Password</label>
+            <label for="password">Password</label><br>
+            <input type="checkbox" onclick="myFunction()"> Show Password
         </div>
         <br>
         <!-- Submit button -->
         <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
     </form>
+{% endblock %}
+
+{% block javascript %}
+    <script src="/static/account/js/toggle_password_visibility.js"></script>
 {% endblock %}

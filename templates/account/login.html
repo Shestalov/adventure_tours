@@ -19,11 +19,15 @@
         <div class="form-floating">
             <input type="password" class="form-control" name="password" id="password"
                    placeholder="Enter password" required>
-            <label for="password">Password</label>
+            <label for="password">Password</label><br>
+            <input type="checkbox" onclick="myFunction()"> Show Password
         </div>
         <br>
         <!-- Submit button -->
         <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
     </form>
-    <br>
+{% endblock %}
+
+{% block javascript %}
+    <script src="/static/account/js/toggle_password_visibility.js"></script>
 {% endblock %}

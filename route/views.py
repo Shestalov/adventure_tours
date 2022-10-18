@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
-from . import models
+import json
 import datetime
+from . import models
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import connection
@@ -153,6 +154,7 @@ def add_route(request):
         if request.method == 'POST':
             route_type = request.POST.get('route_type')
             departure = request.POST.get('departure')
+            stopping = request.POST.get('stopping')
             destination = request.POST.get('destination')
             country = request.POST.get('country')
             location = request.POST.get('location')
@@ -163,17 +165,23 @@ def add_route(request):
             departure_obj = models.Place.objects.get(name=departure)
             destination_obj = models.Place.objects.get(name=destination)
 
+            with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+                collection = db['stopping']
+                stopping_id = collection.insert_one(stopping).inserted_id
+
+            stopping_list = json.loads(stopping)
+
             new_route = models.Route.objects.create(route_type=route_type, departure=departure_obj.id,
-                                                    stopping={'test': 'test'},
+                                                    stopping=stopping_list,
                                                     destination=destination_obj.id, route_name=route_name,
                                                     country=country,
                                                     location=location, description=description, duration=duration)
             new_route.save()
             messages.success(request, "Route was added")
-            return redirect(new_route)
+            return redirect(new_route) #TODO: check it after added mongo
     else:
         messages.error(request, "User does not have permission!")
-        return redirect('home')
+        return redirect('main:home')
 
 
 @login_required(login_url='account:login')
@@ -183,17 +191,17 @@ def add_event(request, route_id):
             return render(request, 'route/add_event.html')
 
         if request.method == 'POST':
-            route_id = route_id  # request.POST.get('route_id')
+            route_id = route_id
             start_date = request.POST.get('start_date')
             price = request.POST.get('price')
             new_event = models.Event(route_id=route_id, start_date=start_date, price=price, event_admin=1,
-                                     approved_users={'test': 'test'}, pending_users={'test': 'test'})
+                                     event_users={'test': 'test'})
             new_event.save()
             messages.success(request, "Event was added")
-            return redirect('home')
+            return redirect('main:home')
     else:
         messages.error(request, "User does not have permission!")
-        return redirect('home')
+        return redirect('main:home')
 
 
 @login_required(login_url='account:login')
@@ -208,10 +216,10 @@ def add_review(request, route_id):
             new_event = models.Review(route_review=route_review, route_rate=route_rate, route_id_id=route_id)
             new_event.save()
             messages.success(request, "Review was added")
-            return redirect('home')
+            return redirect('main:home')
     else:
         messages.error(request, "User does not have permission!")
-        return redirect('home')
+        return redirect('main:home')
 
 
 @login_required(login_url='account:login')
@@ -222,10 +230,10 @@ def test_page(request):
             if form.is_valid():
                 form.save()
                 messages.success(request, "Review was added")
-                return redirect('home')
+                return redirect('main:home')
         else:
             form = AddReviewForm()
         return render(request, 'route/test_page.html', {'form': form})
     else:
         messages.error(request, "User does not have permission!")
-        return redirect('home')
+        return redirect('main:home')
