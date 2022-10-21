@@ -28,15 +28,8 @@
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock %}
 
-    <script>
-        config = {
-            minDate: "today",
-            altInput: true,
-            altFormat: "j F, Y",
-            dateFormat: "Y-m-d",
-        }
-        flatpickr("input[type=datetime-local]", config);
-    </script>
-
+{% block javascript %}
+    <script src="/static/account/js/date_picker.js"></script>
 {% endblock %}
