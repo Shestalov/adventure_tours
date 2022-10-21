@@ -7,10 +7,11 @@
         <div class="row">
             <ul class="list-group">
                 {% if result %}
-                    {% for itm in result %}
+                    {% for itm in result.result %}
                         <li class="list-group-item d-flex justify-content-between align-items-center rounded">
                             {
                             "event_id": "{{ itm.event_id }}",
+                            "route_id": "{{ itm.route_id }}",
                             {#                            "route_type": "{{ itm.route_type }}",#}
                             {"event_admin": "{{ itm.event_admin }}",
                             "start_date": "{{ itm.start_date }}",
@@ -28,12 +29,18 @@
                                 "pending": {{ itm.pending }}
                             {% endif %}
                             }
-                            <a href="{% url 'route:event_info' itm.route_id itm.event_id %}"
-                               class="btn btn-sm btn-info flex-shrink-0 me-2">Event info</a>
+                            {% if button is False %}
+                                <a href="{% url 'route:add_me_to_event' itm.route_id itm.event_id %}"
+                                   class="btn btn-sm btn-warning flex-shrink-0 me-2">Join to event</a>
+                            {% else %}
+                                <a href="#"
+                                   class="btn btn-sm btn-outline-warning flex-shrink-0 me-2"
+                                   style="pointer-events: none">Joined</a>
+                            {% endif %}
                         </li><br>
                     {% endfor %}
                 {% else %}
-                    <h3 class="text-center">Event does not exist (event tmpl)</h3>
+                    <h3 class="text-center">Event does not exist (event_info tmpl)</h3>
                 {% endif %}
             </ul>
         </div>

@@ -8,6 +8,7 @@ from django.db import connection
 from .forms import AddReviewForm
 from utils.mongo_utils import MongoDBConnection
 from bson import ObjectId
+from django.contrib.auth.models import User
 
 
 def discover(request):
@@ -51,9 +52,9 @@ def filter_route(request, route_type=None, country=None, location=None):
 
     cursor.execute(joining)
     result_joining = cursor.fetchall()
-    result = [{'route_name': itm[0], 'route_type': itm[1], 'country': itm[2], 'location': itm[3], 'departure': itm[4],
-               'destination': itm[5], 'description': itm[6], 'duration': itm[7], 'route_id': itm[8]} for itm in
-              result_joining]
+    result = [{'route_name': itm[0], 'route_type': itm[1], 'country': itm[2],
+               'location': itm[3], 'departure': itm[4], 'destination': itm[5],
+               'description': itm[6], 'duration': itm[7], 'route_id': itm[8]} for itm in result_joining]
 
     return render(request, 'route/filter_route.html', {'result': result})
 
@@ -105,8 +106,39 @@ def review(request, route_id):
         return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist (View)'})
 
 
-def event(request, route_id):
+def event(request, route_id, event_id=None):
+    if event_id is None:
+        return render(request, 'route/event.html', event_func(request, route_id))
+    if event_id is not None:
+
+        """checking for button in template event_info"""
+        data = event_func(request, route_id, event_id)
+        button = False
+        if data['result'][0]['event_users_id'] != '':
+            pending = data['result'][0]['pending']
+            accepted = data['result'][0]['accepted']
+            for i in accepted:
+                if request.user.id in i:
+                    button = True
+            for i in pending:
+                if request.user.id in i:
+                    button = True
+
+        return render(request, 'route/event_info.html',
+                      {'result': event_func(request, route_id, event_id), 'button': button})
+
+
+def event_func(request, route_id, event_id=None):
     cursor = connection.cursor()
+    query_filter = []
+
+    if route_id is not None:
+        query_filter.append(f"route_id='{route_id}'")
+    if event_id is not None:
+        query_filter.append(f"route_event.id='{event_id}'")
+
+    filter_string = ' and '.join(query_filter)
+
     raw_query = f"""SELECT route_route.route_type, 
                             route_event.event_admin,
                             route_event.start_date, 
@@ -117,7 +149,10 @@ def event(request, route_id):
                             route_route.stopping,
                             finish.name AS destination,
                             route_route.duration, 
-                            route_route.route_name
+                            route_route.route_name,
+                            route_event.event_users,
+                            route_event.id,
+                            route_route.id
                             FROM route_event
                                  JOIN route_route
                                       ON route_event.route_id = route_route.id
@@ -125,23 +160,80 @@ def event(request, route_id):
                                       ON start.id = route_route.departure
                                  JOIN route_place AS finish
                                       ON finish.id = route_route.destination
-                            WHERE route_id='{route_id}' AND route_event.start_date >= '{datetime.date.today()}';"""
+                            WHERE """ + filter_string + \
+                f"""AND route_event.start_date >= '{datetime.date.today()}';"""
 
     cursor.execute(raw_query)
     row = cursor.fetchall()
 
-    result = [{'route_type': itm[0], 'event_admin': itm[1], 'start_date': itm[2],
-               'price': itm[3], 'country': itm[4], 'location': itm[5], 'departure': itm[6],
-               'stopping': itm[7], 'destination': itm[8], 'duration': itm[9], 'route_name': itm[10]} for itm in row]
+    result = [{'route_type': itm[0],
+               'event_admin': itm[1],
+               'start_date': itm[2],
+               'price': itm[3],
+               'country': itm[4],
+               'location': itm[5],
+               'departure': itm[6],
+               'stopping': itm[7],
+               'destination': itm[8],
+               'duration': itm[9],
+               'route_name': itm[10],
+               'event_users_id': itm[11],
+               'event_id': itm[12],
+               'route_id': itm[13]} for itm in row]
 
     if result:
         with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
-            collection = db['stopping']
-            stopping = collection.find_one({'_id': ObjectId(result[0]['stopping'])})
+            collection_stopping = db['stopping']
+            stopping = collection_stopping.find_one({'_id': ObjectId(result[0]['stopping'])})
+
+            if result[0]['event_users_id'] != '':
+                collection_users = db['event_users']
+                for itm in range(len(result)):
+                    users = collection_users.find_one({'_id': ObjectId(result[itm]['event_users_id'])})
+
+                    user_accepted = User.objects.filter(pk__in=users['accepted'])
+                    user_pending = User.objects.filter(pk__in=users['pending'])
+
+                    list_user_accepted = [{itm.id: itm.username} for itm in user_accepted]
+                    list_user_pending = [{itm.id: itm.username} for itm in user_pending]
+
+                    result[itm]['accepted'] = list_user_accepted
+                    result[itm]['pending'] = list_user_pending
     else:
         stopping = None
 
-    return render(request, 'route/event.html', {'result': result, 'stopping': stopping})
+    return {'result': result, 'stopping': stopping}
+
+
+@login_required(login_url='account:login')
+def add_me_to_event(request, route_id, event_id):
+    user = request.user.id
+    event_ = models.Event.objects.filter(id=event_id, route_id=route_id).first()
+
+    with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+        collection_event_users = db['event_users']
+        # when event created the 'event_users' cell will be empty
+        # checking if any users joined to event (not empty cell) or not (empty cell) in route_event.event_users
+        if event_.event_users != '':
+            event_users = collection_event_users.find_one({'_id': ObjectId(event_.event_users)})
+
+            # checking if user in pending or in accepted
+            if user in event_users['pending'] or user in event_users['accepted']:
+                messages.error(request, 'Your are already joined to event!')
+            else:
+                event_users['pending'].append(user)
+                collection_event_users.update_one({'_id': ObjectId(event_.event_users)},
+                                                  {'$set': event_users}, upsert=False)
+                messages.success(request, 'You are joined to event!')
+        else:
+            # added user in new line (mongo)
+            new_user = collection_event_users.insert_one({"accepted": [], "pending": [user]})
+            # put id(from mongo) in route_event(to sqlite)
+            event_.event_users = new_user.inserted_id
+            event_.save()
+            messages.success(request, 'You are joined to event!')
+
+    return redirect('route:event_info', route_id=route_id, event_id=event_id)
 
 
 @login_required(login_url='account:login')
@@ -165,20 +257,20 @@ def add_route(request):
             departure_obj = models.Place.objects.get(name=departure)
             destination_obj = models.Place.objects.get(name=destination)
 
-            with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
-                collection = db['stopping']
-                stopping_id = collection.insert_one(stopping).inserted_id
-
             stopping_list = json.loads(stopping)
 
+            with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+                collection = db['stopping']
+                stopping_id = collection.insert_one({'points': stopping_list}).inserted_id
+
             new_route = models.Route.objects.create(route_type=route_type, departure=departure_obj.id,
-                                                    stopping=stopping_list,
+                                                    stopping=stopping_id,
                                                     destination=destination_obj.id, route_name=route_name,
                                                     country=country,
                                                     location=location, description=description, duration=duration)
             new_route.save()
             messages.success(request, "Route was added")
-            return redirect(new_route) #TODO: check it after added mongo
+            return redirect("main:home")
     else:
         messages.error(request, "User does not have permission!")
         return redirect('main:home')
@@ -194,8 +286,8 @@ def add_event(request, route_id):
             route_id = route_id
             start_date = request.POST.get('start_date')
             price = request.POST.get('price')
-            new_event = models.Event(route_id=route_id, start_date=start_date, price=price, event_admin=1,
-                                     event_users={'test': 'test'})
+            new_event = models.Event(route_id=route_id, start_date=start_date, price=price, event_admin=request.user.id,
+                                     event_users='')
             new_event.save()
             messages.success(request, "Event was added")
             return redirect('main:home')

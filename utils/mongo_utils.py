@@ -26,10 +26,18 @@ class MongoDBConnection:
         self.client.close()
 
 
-if __name__ == '__main__':
-    with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
-        collection = db['stopping']
-        collection.insert_one({'points': [{'name': f'point_{uuid.uuid4}', 'lat': random.random(),
-                                           'lon': random.random()},
-                                          {'name': f'point_{uuid.uuid4}', 'lat': random.random(),
-                                           'lon': random.random()}]})
+# if __name__ == '__main__':
+
+    # with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+
+        # for adding random stopping in stopping collections
+        # collection = db['stopping']
+        # collection.insert_one({'points': [{'name': f'point_{uuid.uuid4}', 'lat': random.random(),
+        #                                    'lon': random.random()},
+        #                                   {'name': f'point_{uuid.uuid4}', 'lat': random.random(),
+        #                                    'lon': random.random()}]})
+
+        # for adding users in event_users
+        # collection = db['event_users']
+        # collection.insert_one({"pending": [1, 2, 3], "accepted": [4, 5]})
+        # print(collection.find_one())

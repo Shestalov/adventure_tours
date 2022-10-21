@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy
-
+import json
 
 class Place(models.Model):
     name = models.CharField(max_length=50)
@@ -15,7 +15,7 @@ class Place(models.Model):
 
 class Route(models.Model):
     class RouteType(models.TextChoices):
-        bicycle_route = 'bicycle', gettext_lazy('bicycle')
+        bicycle_route = 'cycling', gettext_lazy('cycling')
         hiking_route = 'hiking', gettext_lazy('hiking')
 
     route_name = models.CharField(max_length=255, null=True)
@@ -62,3 +62,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
+
+
+def stopping_validator(value):
+    pass

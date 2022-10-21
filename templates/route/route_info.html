@@ -10,6 +10,7 @@
                     {% for itm in result %}
                         <li class="list-group-item d-flex justify-content-between align-items-center rounded">
                             {
+                            "route_id": "{{ itm.route_id }}",
                             "route_name": "{{ itm.route_name }}",
                             "route_type": "{{ itm.route_type }}",
                             "country": "{{ itm.country }}",
@@ -20,6 +21,7 @@
                             "departure" : "{{ itm.departure }}",
                             "destination" : "{{ itm.destination }}",
                             "stopping": "{{ stopping }}"
+                            }
 
                             <a href="{% url 'route:add_event' itm.route_id %}"
                                class="btn btn-sm btn-warning flex-shrink-0 me-2">Add event</a>
@@ -36,7 +38,7 @@
                         </li>
                     {% endfor %}
                 {% else %}
-                    <h3 class="text-center">Does not exist (temp)</h3>
+                    <h3 class="text-center">Does not exist (route_info templ)</h3>
                 {% endif %}
             </ul>
             <br>

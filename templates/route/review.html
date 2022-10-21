@@ -9,8 +9,10 @@
 {#                {% if result %}#}
                     {% for itm in result %}
                         <li class="list-group-item d-flex justify-content-center align-items-center rounded">
+                            {
                             "route_review": "{{ itm.route_review }}",
-                            "route_rate": "{{ itm.route_rate }}"}
+                            "route_rate": "{{ itm.route_rate }}"
+                            }
                         </li><br>
                     {% endfor %}
 {#                {% else %}#}
