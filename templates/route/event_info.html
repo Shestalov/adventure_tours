@@ -15,7 +15,6 @@
                             {#                            "route_type": "{{ itm.route_type }}",#}
                             {"event_admin": "{{ itm.event_admin }}",
                             "start_date": "{{ itm.start_date }}",
-                            "price": "{{ itm.price }}",
                             {#                            "country": "{{ itm.country }}",#}
                             {#                            "location": "{{ itm.location }}",#}
                             {#                            "departure": "{{ itm.departure }}",#}
@@ -25,10 +24,17 @@
                             {#                            "stopping": "{{ stopping }}",#}
                             {% if itm.event_users_id != '' %}
                                 "event_users_id" : "{{ itm.event_users_id }}",
-                                "accepted": {{ itm.accepted }},
-                                "pending": {{ itm.pending }}
+                                {% if itm.pending|length > 0 %}
+                                    "pending": {{ itm.pending }},
+                                {% endif %}
+                                {% if itm.accepted|length > 0 %}
+                                    "accepted": {{ itm.accepted }},
+                                {% endif %}
                             {% endif %}
+                            "price": "{{ itm.price }}"
                             }
+
+                            {# button join to event/joined #}
                             {% if button is False %}
                                 <a href="{% url 'route:add_me_to_event' itm.route_id itm.event_id %}"
                                    class="btn btn-sm btn-warning flex-shrink-0 me-2">Join to event</a>
@@ -37,6 +43,7 @@
                                    class="btn btn-sm btn-outline-warning flex-shrink-0 me-2"
                                    style="pointer-events: none">Joined</a>
                             {% endif %}
+
                         </li><br>
                     {% endfor %}
                 {% else %}

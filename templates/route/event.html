@@ -14,7 +14,6 @@
                             {#                            "route_type": "{{ itm.route_type }}",#}
                             {"event_admin": "{{ itm.event_admin }}",
                             "start_date": "{{ itm.start_date }}",
-                            "price": "{{ itm.price }}",
                             {#                            "country": "{{ itm.country }}",#}
                             {#                            "location": "{{ itm.location }}",#}
                             {#                            "departure": "{{ itm.departure }}",#}
@@ -24,9 +23,14 @@
                             {#                            "stopping": "{{ stopping }}",#}
                             {% if itm.event_users_id != '' %}
                                 "event_users_id" : "{{ itm.event_users_id }}",
-                                "accepted": {{ itm.accepted }},
-                                "pending": {{ itm.pending }}
+                                {% if itm.pending|length > 0 %}
+                                    "pending": {{ itm.pending }},
+                                {% endif %}
+                                {% if itm.accepted|length > 0 %}
+                                    "accepted": {{ itm.accepted }},
+                                {% endif %}
                             {% endif %}
+                            "price": "{{ itm.price }}",
                             }
                             <a href="{% url 'route:event_info' itm.route_id itm.event_id %}"
                                class="btn btn-sm btn-info flex-shrink-0 me-2">Event info</a>

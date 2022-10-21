@@ -109,7 +109,7 @@ def review(request, route_id):
 def event(request, route_id, event_id=None):
     if event_id is None:
         return render(request, 'route/event.html', event_func(request, route_id))
-    if event_id is not None:
+    else:
 
         """checking for button in template event_info"""
         data = event_func(request, route_id, event_id)
@@ -161,7 +161,7 @@ def event_func(request, route_id, event_id=None):
                                  JOIN route_place AS finish
                                       ON finish.id = route_route.destination
                             WHERE """ + filter_string + \
-                f"""AND route_event.start_date >= '{datetime.date.today()}';"""
+                f"""AND route_event.start_date >= '{datetime.date.today()}' ORDER BY route_event.id DESC;"""
 
     cursor.execute(raw_query)
     row = cursor.fetchall()
@@ -186,10 +186,10 @@ def event_func(request, route_id, event_id=None):
             collection_stopping = db['stopping']
             stopping = collection_stopping.find_one({'_id': ObjectId(result[0]['stopping'])})
 
-            if result[0]['event_users_id'] != '':
-                collection_users = db['event_users']
-                for itm in range(len(result)):
-                    users = collection_users.find_one({'_id': ObjectId(result[itm]['event_users_id'])})
+            for num in range(len(result)):
+                if result[num]['event_users_id'] != '':
+                    collection_users = db['event_users']
+                    users = collection_users.find_one({'_id': ObjectId(result[num]['event_users_id'])})
 
                     user_accepted = User.objects.filter(pk__in=users['accepted'])
                     user_pending = User.objects.filter(pk__in=users['pending'])
@@ -197,8 +197,8 @@ def event_func(request, route_id, event_id=None):
                     list_user_accepted = [{itm.id: itm.username} for itm in user_accepted]
                     list_user_pending = [{itm.id: itm.username} for itm in user_pending]
 
-                    result[itm]['accepted'] = list_user_accepted
-                    result[itm]['pending'] = list_user_pending
+                    result[num]['accepted'] = list_user_accepted
+                    result[num]['pending'] = list_user_pending
     else:
         stopping = None
 
@@ -235,6 +235,16 @@ def add_me_to_event(request, route_id, event_id):
 
     return redirect('route:event_info', route_id=route_id, event_id=event_id)
 
+
+# def event_accepted_users(request, route_id, event_id):
+#     if request.method == 'GET':
+#         return ''
+#     if request.method == 'POST':
+#
+#         models.Event.objects.filter(id=event_id)
+#         ac_user = int(request.POST.get('accepted'))
+#         with MongoDBConnection as db:
+#
 
 @login_required(login_url='account:login')
 def add_route(request):

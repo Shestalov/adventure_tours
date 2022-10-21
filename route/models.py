@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy
-import json
+
 
 class Place(models.Model):
     name = models.CharField(max_length=50)
@@ -62,7 +62,3 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
-
-
-def stopping_validator(value):
-    pass
