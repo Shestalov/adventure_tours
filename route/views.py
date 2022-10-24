@@ -258,7 +258,7 @@ def add_me_to_event(request, route_id, event_id):
 def users_of_event(request, route_id, event_id):
     event_ = models.Event.objects.all().filter(id=event_id).select_related('route').first()
 
-    if request.user.id == event_.event_admin:
+    if (event_ is not None) and request.user.id == event_.event_admin:
 
         with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
                                os.environ['MONGO_PORT']) as db:
