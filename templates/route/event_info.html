@@ -31,7 +31,7 @@
                                 {% endif %}
                                 {# acsessing for event admin to manage event users #}
                                 {% if request.user.id == itm.event_admin %}
-                                    <a href="{% url 'route:event_users' itm.route_id itm.event_id %}"
+                                    <a href="{% url 'route:users_of_event' itm.route_id itm.event_id %}"
                                        class="btn btn-sm btn-warning flex-shrink-0 me-2">Event users</a>
                                 {% endif %}
                             </div>

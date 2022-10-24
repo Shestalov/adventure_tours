@@ -24,7 +24,7 @@
                 {% if users.pending|length > 0 %}
                     {% for itm in users.pending %}
                         <li class="list-group-item">{user_id: {{ itm }}, user_name: "net yet added"}
-                            <form action="users" method="POST">
+                            <form action="users_of_event" method="POST">
                                 {% csrf_token %}
                                 <div class="form-floating mt-2">
                                     <input type="hidden" class="form-control" name="user_id" id="user_id"

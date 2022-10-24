@@ -249,32 +249,37 @@ def add_me_to_event(request, route_id, event_id):
 
 
 @login_required(login_url='account:login')
-def event_users(request, route_id, event_id):
-    # if request.user.has_perm():
+def users_of_event(request, route_id, event_id):
+
     event_ = models.Event.objects.all().filter(id=event_id).select_related('route').first()
 
-    with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
-        collection_users = db['event_users']
+    if request.user.id == event_.event_admin:
 
-        if event_.event_users is not '':
-            users = collection_users.find_one({'_id': ObjectId(event_.event_users)})
-        else:
-            users = None
+        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+            collection_users = db['event_users']
 
-        if request.method == 'GET':
-            return render(request, 'route/event_users.html', {'event': event_, 'users': users})
+            if event_.event_users is not '':
+                users = collection_users.find_one({'_id': ObjectId(event_.event_users)})
+            else:
+                users = None
 
-        if request.method == 'POST':
-            pending_user = int(request.POST.get('user_id'))
+            if request.method == 'GET':
+                return render(request, 'route/users_of_event.html', {'event': event_, 'users': users})
 
-            users['pending'].pop(users['pending'].index(pending_user))
-            users['accepted'].append(pending_user)
+            if request.method == 'POST':
+                pending_user = int(request.POST.get('user_id'))
 
-            collection_users.update_one({'_id': ObjectId(event_.event_users)}, {'$set': users}, upsert=False)
+                users['pending'].pop(users['pending'].index(pending_user))
+                users['accepted'].append(pending_user)
 
-            messages.success(request, f'User id: {pending_user}'
-                                      f' username:(not yet added) was added to accepted users')
-            return redirect('route:event_users', route_id=route_id, event_id=event_id)
+                collection_users.update_one({'_id': ObjectId(event_.event_users)}, {'$set': users}, upsert=False)
+
+                messages.success(request, f'User id: {pending_user}'
+                                          f' username:(not yet added) was added to accepted users')
+                return redirect('route:event_users', route_id=route_id, event_id=event_id)
+    else:
+        messages.error(request, 'You are not admin of event')
+        return redirect('route:event_info', route_id=route_id, event_id=event_id)
 
 
 @login_required(login_url='account:login')
