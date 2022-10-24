@@ -3,21 +3,33 @@
 {% block title %}Review{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container text-center">
+        <h1 class="mb-4">"{{ result.0.route_id.route_name }}" reviews</h1>
         <div class="row">
+            <div class="mb-4">
+                <a href="{% url 'route:add_review' result.0.route_id_id %}"
+                   class="btn btn-sm btn-warning flex-shrink-0 me-2">Add review</a>
+            </div>
             <ul class="list-group">
-{#                {% if result %}#}
-                    {% for itm in result %}
-                        <li class="list-group-item d-flex justify-content-center align-items-center rounded">
+                {% for itm in result %}
+                    <div class="card text-center col-md-10 mx-auto mb-5">
+                        <div class="card-header">
                             {
-                            "route_review": "{{ itm.route_review }}",
+                            "route_id": "{{ itm.route_id_id }}",
                             "route_rate": "{{ itm.route_rate }}"
                             }
-                        </li><br>
-                    {% endfor %}
-{#                {% else %}#}
-{#                    <h3>Review does not exist (template)</h3>#}
-{#                {% endif %}#}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ itm.route_review }}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            {
+                            "user_name": "not yet added",
+                            "public_date": "not yet added"
+                            }
+                        </div>
+                    </div>
+                {% endfor %}
             </ul>
         </div>
     </div>

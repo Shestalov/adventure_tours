@@ -4,51 +4,86 @@
 
 {% block content %}
     <div class="container">
+
         <div class="row">
             <ul class="list-group">
-                {% if result %}
+                {# checking for correct event_id input if not - event does not exist #}
+                {% if result.result|length > 0 %}
                     {% for itm in result.result %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center rounded">
-                            {
-                            "event_id": "{{ itm.event_id }}",
-                            "route_id": "{{ itm.route_id }}",
-                            {#                            "route_type": "{{ itm.route_type }}",#}
-                            {"event_admin": "{{ itm.event_admin }}",
-                            "start_date": "{{ itm.start_date }}",
-                            {#                            "country": "{{ itm.country }}",#}
-                            {#                            "location": "{{ itm.location }}",#}
-                            {#                            "departure": "{{ itm.departure }}",#}
-                            {#                            "destination": "{{ itm.destination }}",#}
-                            {#                            "duration": "{{ itm.duration }}",#}
-                            {#                            "route_name": "{{ itm.route_name }}",#}
-                            {#                            "stopping": "{{ stopping }}",#}
-                            {% if itm.event_users_id != '' %}
-                                "event_users_id" : "{{ itm.event_users_id }}",
-                                {% if itm.pending|length > 0 %}
-                                    "pending": {{ itm.pending }},
-                                {% endif %}
-                                {% if itm.accepted|length > 0 %}
-                                    "accepted": {{ itm.accepted }},
-                                {% endif %}
-                            {% endif %}
-                            "price": "{{ itm.price }}"
-                            }
+                        <div class="text-center col-md-10 mx-auto">
+                            <h1 class="mb-4">"{{ result.result.0.route_name }}" event</h1>
+                            <h2 class="mb-4">"event name (not yet added)" info</h2>
 
-                            {# button join to event/joined #}
-                            {% if button is False %}
-                                <a href="{% url 'route:add_me_to_event' itm.route_id itm.event_id %}"
-                                   class="btn btn-sm btn-warning flex-shrink-0 me-2">Join to event</a>
-                            {% else %}
-                                <a href="#"
-                                   class="btn btn-sm btn-outline-warning flex-shrink-0 me-2"
-                                   style="pointer-events: none">Joined</a>
-                            {% endif %}
+                            <div class="mb-5 p-2">
+                                {# button join to event/joined/if admin #}
+                                {# admin of event can not join or be joined #}
+                                {% if request.user.id == itm.event_admin %}
+                                    <a href="#"
+                                       class="btn btn-sm btn-outline-danger flex-shrink-0 me-2"
+                                       style="pointer-events: none">You are admin</a>
+                                {% elif button is False %}
+                                    <a href="{% url 'route:add_me_to_event' itm.route_id itm.event_id %}"
+                                       class="btn btn-sm btn-warning flex-shrink-0 me-2">Join to event</a>
+                                {% else %}
+                                    <a href="#"
+                                       class="btn btn-sm btn-outline-success flex-shrink-0 me-2"
+                                       style="pointer-events: none">Joined</a>
+                                {% endif %}
+                                {# acsessing for event admin to manage event users #}
+                                {% if request.user.id == itm.event_admin %}
+                                    <a href="{% url 'route:event_users' itm.route_id itm.event_id %}"
+                                       class="btn btn-sm btn-warning flex-shrink-0 me-2">Event users</a>
+                                {% endif %}
+                            </div>
 
-                        </li><br>
+                            <h4>General event info</h4>
+                            <div class="mb-5 p-2 border rounded">
+                                {
+                                "event_id": "{{ itm.event_id }}",
+                                "route_id": "{{ itm.route_id }}",
+                                {#                            "route_type": "{{ itm.route_type }}",#}
+                                "event_admin": "{{ itm.event_admin }}",
+                                "start_date": "{{ itm.start_date }}",
+                                {#                            "country": "{{ itm.country }}",#}
+                                {#                            "location": "{{ itm.location }}",#}
+                                {#                            "departure": "{{ itm.departure }}",#}
+                                {#                            "destination": "{{ itm.destination }}",#}
+                                {#                            "duration": "{{ itm.duration }}",#}
+                                {#                            "route_name": "{{ itm.route_name }}",#}
+                                {#                            "stopping": "{{ stopping }}",#}
+                                {% if itm.event_users_id != '' %}
+                                    "event_users_id" : "{{ itm.event_users_id }}",
+                                    {% if itm.pending|length > 0 %}
+                                        "pending": {{ itm.pending }},
+                                    {% endif %}
+                                    {% if itm.accepted|length > 0 %}
+                                        "accepted": {{ itm.accepted }},
+                                    {% endif %}
+                                {% endif %}
+                                "price": "{{ itm.price }}"
+                                }
+                            </div>
+
+                            <h4>Event description</h4>
+                            <div class="mb-5 p-2 border rounded">
+                                <p> NOT YET ADDED IN EVENT DESCRIPTION! Lorem Ipsum is simply dummy text of the printing
+                                    and
+                                    typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
+                                    since
+                                    the 1500s, an unknown printer took a galley of type and scrambled it to make a type
+                                    specimen book. It has survived not only five centuries, but also the leap into
+                                    electronic typesetting, remaining essentially unchanged. It was popularised in the
+                                    1960s with the release of Let set sheets containing Lorem Ipsum passages, and more
+                                    recently with desktop publishing software like Aldus PageMaker including versions
+                                    of Lorem Ipsum.</p>
+                            </div>
+                        </div>
                     {% endfor %}
+
                 {% else %}
                     <h3 class="text-center">Event does not exist (event_info tmpl)</h3>
                 {% endif %}
+
             </ul>
         </div>
     </div>

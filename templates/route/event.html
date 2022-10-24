@@ -4,41 +4,56 @@
 
 {% block content %}
     <div class="container">
+        {% if result %}
+            <h1 class="mb-4 text-center">"{{ result.0.route_name }}" events</h1>
+        {% endif %}
         <div class="row">
             <ul class="list-group">
                 {% if result %}
                     {% for itm in result %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center rounded">
-                            {
-                            "event_id": "{{ itm.event_id }}",
-                            {#                            "route_type": "{{ itm.route_type }}",#}
-                            {"event_admin": "{{ itm.event_admin }}",
-                            "start_date": "{{ itm.start_date }}",
-                            {#                            "country": "{{ itm.country }}",#}
-                            {#                            "location": "{{ itm.location }}",#}
-                            {#                            "departure": "{{ itm.departure }}",#}
-                            {#                            "destination": "{{ itm.destination }}",#}
-                            {#                            "duration": "{{ itm.duration }}",#}
-                            {#                            "route_name": "{{ itm.route_name }}",#}
-                            {#                            "stopping": "{{ stopping }}",#}
-                            {% if itm.event_users_id != '' %}
-                                "event_users_id" : "{{ itm.event_users_id }}",
-                                {% if itm.pending|length > 0 %}
-                                    "pending": {{ itm.pending }},
+
+                        <div class="card text-center col-md-10 mx-auto mb-5">
+
+                            <div class="card-header">
+                                {
+                                "event_id": "{{ itm.event_id }}",
+                                "event_admin": "{{ itm.event_admin }}",
+                                "start_date": "{{ itm.start_date }}",
+
+                                {# display if any users in pending or accepted #}
+                                {% if itm.event_users_id != '' %}
+                                    "event_users_id" : "{{ itm.event_users_id }}",
+                                    {# display if any user pending and how many #}
+                                    {% if itm.pending|length > 0 %}
+                                        "pending": {{ itm.pending|length }},
+                                    {% endif %}
+                                    {# display if users accepted and how many #}
+                                    {% if itm.accepted|length > 0 %}
+                                        "accepted": {{ itm.accepted|length }},
+                                    {% endif %}
                                 {% endif %}
-                                {% if itm.accepted|length > 0 %}
-                                    "accepted": {{ itm.accepted }},
-                                {% endif %}
-                            {% endif %}
-                            "price": "{{ itm.price }}",
-                            }
-                            <a href="{% url 'route:event_info' itm.route_id itm.event_id %}"
-                               class="btn btn-sm btn-info flex-shrink-0 me-2">Event info</a>
-                        </li><br>
+
+                                "price": "{{ itm.price }}"
+                                }
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">Some event name (not yet added)</h5>
+                                <p class="card-text">Event description Event description (not yet added)</p>
+                            </div>
+
+                            <div class="card-footer text-muted">
+                                <a href="{% url 'route:event_info' itm.route_id itm.event_id %}"
+                                   class="btn btn-sm btn-info flex-shrink-0 me-2">Event info</a>
+                            </div>
+
+                        </div>
                     {% endfor %}
+
                 {% else %}
                     <h3 class="text-center">Event does not exist (event tmpl)</h3>
                 {% endif %}
+
             </ul>
         </div>
     </div>

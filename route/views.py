@@ -78,7 +78,7 @@ def route_info(request, route_id):
                                           ON finish.id = route_route.destination
                             WHERE route_route.id = '{route_id}';"""
 
-    events = models.Event.objects.filter(route_id=route_id).all()
+    events = models.Event.objects.filter(route_id=route_id, start_date__gte=datetime.date.today()).all()
     reviews = models.Review.objects.filter(route_id_id=route_id).all()
 
     cursor.execute(raw_query_route)
@@ -99,11 +99,11 @@ def route_info(request, route_id):
 
 
 def review(request, route_id):
-    result = models.Review.objects.all().filter(route_id=route_id)
+    result = models.Review.objects.filter(route_id=route_id).select_related('route_id').all()
     if result.exists():
         return render(request, 'route/review.html', {'result': result})
     else:
-        return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist (View)'})
+        return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist (msg from views)'})
 
 
 def event(request, route_id, event_id=None):
@@ -113,16 +113,19 @@ def event(request, route_id, event_id=None):
 
         """checking for button in template event_info"""
         data = event_func(request, route_id, event_id)
+        print(data)
         button = False
-        if data['result'][0]['event_users_id'] != '':
-            pending = data['result'][0]['pending']
-            accepted = data['result'][0]['accepted']
-            for i in accepted:
-                if request.user.id in i:
-                    button = True
-            for i in pending:
-                if request.user.id in i:
-                    button = True
+
+        if len(data['result']) > 0:
+            if data['result'][0]['event_users_id'] != '':
+                pending = data['result'][0]['pending']
+                accepted = data['result'][0]['accepted']
+                for i in accepted:
+                    if request.user.id in i:
+                        button = True
+                for i in pending:
+                    if request.user.id in i:
+                        button = True
 
         return render(request, 'route/event_info.html',
                       {'result': event_func(request, route_id, event_id), 'button': button})
@@ -186,6 +189,9 @@ def event_func(request, route_id, event_id=None):
             collection_stopping = db['stopping']
             stopping = collection_stopping.find_one({'_id': ObjectId(result[0]['stopping'])})
 
+            if request.user.id == result[0]['event_admin']:
+                pass
+
             for num in range(len(result)):
                 if result[num]['event_users_id'] != '':
                     collection_users = db['event_users']
@@ -210,41 +216,66 @@ def add_me_to_event(request, route_id, event_id):
     user = request.user.id
     event_ = models.Event.objects.filter(id=event_id, route_id=route_id).first()
 
-    with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
-        collection_event_users = db['event_users']
-        # when event created the 'event_users' cell will be empty
-        # checking if any users joined to event (not empty cell) or not (empty cell) in route_event.event_users
-        if event_.event_users != '':
-            event_users = collection_event_users.find_one({'_id': ObjectId(event_.event_users)})
+    # checking if user is admin of event. Admin can not be in accepting or pending!
+    if request.user.id == event_.event_admin:
+        messages.error(request, 'You are admin of event!')
+        return redirect('route:event_info', route_id=route_id, event_id=event_id)
+    else:
+        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+            collection_event_users = db['event_users']
+            # when new event is created the 'route_event.event_users' cell will be empty
+            # checking if any users joined to event or not
+            if event_.event_users != '':
+                event_users = collection_event_users.find_one({'_id': ObjectId(event_.event_users)})
 
-            # checking if user in pending or in accepted
-            if user in event_users['pending'] or user in event_users['accepted']:
-                messages.error(request, 'Your are already joined to event!')
+                # checking if user in pending or in accepted
+                # the event_admin can not be in pending or accepted
+                if user in event_users['pending'] or user in event_users['accepted']:
+                    messages.error(request, 'Your are already joined to event!')
+                else:
+                    event_users['pending'].append(user)
+                    collection_event_users.update_one({'_id': ObjectId(event_.event_users)},
+                                                      {'$set': event_users}, upsert=False)
+                    messages.success(request, 'You are joined to event!')
             else:
-                event_users['pending'].append(user)
-                collection_event_users.update_one({'_id': ObjectId(event_.event_users)},
-                                                  {'$set': event_users}, upsert=False)
+                # added user in new line (mongo)
+                new_user = collection_event_users.insert_one({"accepted": [], "pending": [user]})
+                # put id(from mongo) in route_event(to sqlite)
+                event_.event_users = new_user.inserted_id
+                event_.save()
                 messages.success(request, 'You are joined to event!')
+
+        return redirect('route:event_info', route_id=route_id, event_id=event_id)
+
+
+@login_required(login_url='account:login')
+def event_users(request, route_id, event_id):
+    # if request.user.has_perm():
+    event_ = models.Event.objects.all().filter(id=event_id).select_related('route').first()
+
+    with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+        collection_users = db['event_users']
+
+        if event_.event_users is not '':
+            users = collection_users.find_one({'_id': ObjectId(event_.event_users)})
         else:
-            # added user in new line (mongo)
-            new_user = collection_event_users.insert_one({"accepted": [], "pending": [user]})
-            # put id(from mongo) in route_event(to sqlite)
-            event_.event_users = new_user.inserted_id
-            event_.save()
-            messages.success(request, 'You are joined to event!')
+            users = None
 
-    return redirect('route:event_info', route_id=route_id, event_id=event_id)
+        if request.method == 'GET':
+            return render(request, 'route/event_users.html', {'event': event_, 'users': users})
 
+        if request.method == 'POST':
+            pending_user = int(request.POST.get('user_id'))
 
-# def event_accepted_users(request, route_id, event_id):
-#     if request.method == 'GET':
-#         return ''
-#     if request.method == 'POST':
-#
-#         models.Event.objects.filter(id=event_id)
-#         ac_user = int(request.POST.get('accepted'))
-#         with MongoDBConnection as db:
-#
+            users['pending'].pop(users['pending'].index(pending_user))
+            users['accepted'].append(pending_user)
+
+            collection_users.update_one({'_id': ObjectId(event_.event_users)}, {'$set': users}, upsert=False)
+
+            messages.success(request, f'User id: {pending_user}'
+                                      f' username:(not yet added) was added to accepted users')
+            return redirect('route:event_users', route_id=route_id, event_id=event_id)
+
 
 @login_required(login_url='account:login')
 def add_route(request):
@@ -300,10 +331,10 @@ def add_event(request, route_id):
                                      event_users='')
             new_event.save()
             messages.success(request, "Event was added")
-            return redirect('main:home')
+            return redirect('route:event_info', route_id=route_id, event_id=new_event.pk)
     else:
         messages.error(request, "User does not have permission!")
-        return redirect('main:home')
+        return redirect('route:route_info', route_id=route_id)
 
 
 @login_required(login_url='account:login')
@@ -318,10 +349,10 @@ def add_review(request, route_id):
             new_event = models.Review(route_review=route_review, route_rate=route_rate, route_id_id=route_id)
             new_event.save()
             messages.success(request, "Review was added")
-            return redirect('main:home')
+            return redirect('route:review', route_id=route_id)
     else:
         messages.error(request, "User does not have permission!")
-        return redirect('main:home')
+        return redirect('route:route_info', route_id=route_id)
 
 
 @login_required(login_url='account:login')
