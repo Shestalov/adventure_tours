@@ -1,5 +1,5 @@
-import random
-import uuid
+# import random
+# import uuid
 
 from pymongo import MongoClient
 
@@ -9,11 +9,12 @@ from pymongo import MongoClient
 
 class MongoDBConnection:
 
-    def __init__(self, username, password, hostname, port=27017):
+    def __init__(self, username, password, hostname, port):
         self.hostname = hostname
-        self.port = port
         self.username = username
         self.password = password
+        self.port = port
+
         self.client = None
 
     def __enter__(self):

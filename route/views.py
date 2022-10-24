@@ -9,6 +9,7 @@ from .forms import AddReviewForm
 from utils.mongo_utils import MongoDBConnection
 from bson import ObjectId
 from django.contrib.auth.models import User
+import os
 
 
 def discover(request):
@@ -88,7 +89,8 @@ def route_info(request, route_id):
                'destination': itm[8], 'route_id': route_id} for itm in row]
 
     if result:
-        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+        with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
+                               os.environ['MONGO_PORT']) as db:
             collection = db['stopping']
             stopping = collection.find_one({'_id': ObjectId(result[0]['stopping'])})
     else:
@@ -111,20 +113,22 @@ def event(request, route_id, event_id=None):
         return render(request, 'route/event.html', event_func(request, route_id))
     else:
 
-        """checking for button in template event_info"""
+        # checking for button in template event_info
         data = event_func(request, route_id, event_id)
-        print(data)
-        button = False
 
+        button = False
         if len(data['result']) > 0:
             if data['result'][0]['event_users_id'] != '':
+
                 pending = data['result'][0]['pending']
                 accepted = data['result'][0]['accepted']
-                for i in accepted:
-                    if request.user.id in i:
+
+                for itm in accepted:
+                    if request.user.id in itm:
                         button = True
-                for i in pending:
-                    if request.user.id in i:
+
+                for itm in pending:
+                    if request.user.id in itm:
                         button = True
 
         return render(request, 'route/event_info.html',
@@ -185,7 +189,8 @@ def event_func(request, route_id, event_id=None):
                'route_id': itm[13]} for itm in row]
 
     if result:
-        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+        with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
+                               os.environ['MONGO_PORT']) as db:
             collection_stopping = db['stopping']
             stopping = collection_stopping.find_one({'_id': ObjectId(result[0]['stopping'])})
 
@@ -221,7 +226,8 @@ def add_me_to_event(request, route_id, event_id):
         messages.error(request, 'You are admin of event!')
         return redirect('route:event_info', route_id=route_id, event_id=event_id)
     else:
-        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+        with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
+                               os.environ['MONGO_PORT']) as db:
             collection_event_users = db['event_users']
             # when new event is created the 'route_event.event_users' cell will be empty
             # checking if any users joined to event or not
@@ -250,12 +256,12 @@ def add_me_to_event(request, route_id, event_id):
 
 @login_required(login_url='account:login')
 def users_of_event(request, route_id, event_id):
-
     event_ = models.Event.objects.all().filter(id=event_id).select_related('route').first()
 
     if request.user.id == event_.event_admin:
 
-        with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+        with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
+                               os.environ['MONGO_PORT']) as db:
             collection_users = db['event_users']
 
             if event_.event_users is not '':
@@ -305,7 +311,8 @@ def add_route(request):
 
             stopping_list = json.loads(stopping)
 
-            with MongoDBConnection('admin', 'admin', '127.0.0.1') as db:
+            with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
+                                   os.environ['MONGO_PORT']) as db:
                 collection = db['stopping']
                 stopping_id = collection.insert_one({'points': stopping_list}).inserted_id
 
