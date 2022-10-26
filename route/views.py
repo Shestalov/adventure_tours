@@ -329,12 +329,9 @@ def add_route(request):
                                                     destination=destination_obj.id, route_name=route_name,
                                                     country=country,
                                                     location=location, description=description, duration=duration)
-            try:
-                new_route.full_clean()
-                new_route.save()
-            except ValidationError:
-                messages.error(request, '')
-                return redirect('route:add_route')
+
+            new_route.full_clean()
+            new_route.save()
 
             messages.success(request, "Route was added")
             return redirect("route:route_info", route_id=new_route.pk)
