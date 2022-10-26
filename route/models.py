@@ -19,7 +19,9 @@ class Route(models.Model):
         hiking_route = 'hiking', gettext_lazy('hiking')
 
     route_name = models.CharField(max_length=255, null=True)
-    route_type = models.CharField(max_length=50, choices=RouteType.choices, default=RouteType.hiking_route)
+    route_type = models.CharField(max_length=50,
+                                  choices=RouteType.choices,
+                                  default=RouteType.hiking_route)
     departure = models.IntegerField()
     stopping = models.CharField(max_length=50, null=True)
     destination = models.IntegerField()

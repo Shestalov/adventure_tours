@@ -10,6 +10,8 @@ from utils.mongo_utils import MongoDBConnection
 from bson import ObjectId
 from django.contrib.auth.models import User
 import os
+from utils.validations import validation_stopping, validation_route_type, validation_date
+from django.core.exceptions import ValidationError
 
 
 def discover(request):
@@ -118,18 +120,17 @@ def event(request, route_id, event_id=None):
 
         button = False
         if len(data['result']) > 0:
-            if data['result'][0]['event_users_id'] != '':
 
-                pending = data['result'][0]['pending']
-                accepted = data['result'][0]['accepted']
+            pending = data['result'][0]['pending']
+            accepted = data['result'][0]['accepted']
 
-                for itm in accepted:
-                    if request.user.id in itm:
-                        button = True
+            for itm in accepted:
+                if request.user.id in itm:
+                    button = True
 
-                for itm in pending:
-                    if request.user.id in itm:
-                        button = True
+            for itm in pending:
+                if request.user.id in itm:
+                    button = True
 
         return render(request, 'route/event_info.html',
                       {'result': event_func(request, route_id, event_id), 'button': button})
@@ -309,6 +310,13 @@ def add_route(request):
             departure_obj = models.Place.objects.get(name=departure)
             destination_obj = models.Place.objects.get(name=destination)
 
+            try:
+                validation_stopping(stopping)
+                validation_route_type(route_type)
+            except (ValidationError, BaseException) as error:
+                messages.error(request, error.message)
+                return redirect('route:add_route')
+
             stopping_list = json.loads(stopping)
 
             with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
@@ -321,9 +329,15 @@ def add_route(request):
                                                     destination=destination_obj.id, route_name=route_name,
                                                     country=country,
                                                     location=location, description=description, duration=duration)
-            new_route.save()
+            try:
+                new_route.full_clean()
+                new_route.save()
+            except ValidationError:
+                messages.error(request, '')
+                return redirect('route:add_route')
+
             messages.success(request, "Route was added")
-            return redirect("main:home")
+            return redirect("route:route_info", route_id=new_route.pk)
     else:
         messages.error(request, "User does not have permission!")
         return redirect('main:home')
@@ -339,13 +353,31 @@ def add_event(request, route_id):
             route_id = route_id
             start_date = request.POST.get('start_date')
             price = request.POST.get('price')
-            new_event = models.Event(route_id=route_id, start_date=start_date, price=price, event_admin=request.user.id,
-                                     event_users='')
+
+            try:
+                validation_date(start_date)
+            except ValidationError as error:
+                messages.error(request, error.message)
+                return redirect('route:add_event', route_id=route_id)
+
+            with MongoDBConnection(os.environ['MONGO_PASSWORD'], os.environ['MONGO_USERNAME'], os.environ['MONGO_HOST'],
+                                   os.environ['MONGO_PORT']) as db:
+                collection_event_users = db['event_users']
+                new_users = collection_event_users.insert_one({'accepted': [], 'pending': []})
+
+                new_event = models.Event(route_id=route_id,
+                                         start_date=start_date,
+                                         price=price,
+                                         event_admin=request.user.id,
+                                         event_users=new_users.inserted_id)
+
+            new_event.full_clean()
             new_event.save()
-            messages.success(request, "Event was added")
+
+            messages.success(request, 'Event was added')
             return redirect('route:event_info', route_id=route_id, event_id=new_event.pk)
     else:
-        messages.error(request, "User does not have permission!")
+        messages.error(request, 'User does not have permission!')
         return redirect('route:route_info', route_id=route_id)
 
 
