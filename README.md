@@ -13,6 +13,6 @@ https://hub.docker.com/_/mongo
 
 * Install requirements
 
-`pip install -r requirements.txt`
+`$ pip install -r requirements.txt`
 
 * Run project
