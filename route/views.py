@@ -411,14 +411,3 @@ def add_review(request, route_id):
     else:
         messages.error(request, "User does not have permission!")
         return redirect('route:route_info', route_id=route_id)
-
-
-def test_page(request):
-    if request.method == 'GET':
-        uniq_routes_type = models.Route.objects.values('route_type').distinct()
-        return render(request, 'route/discover.html', {'route_type': uniq_routes_type})
-    if request.method == 'POST':
-        route_type = request.POST.get('route_type')
-        country = request.POST.get('country')
-
-        return redirect('route:route_country', route_type=route_type, country=country)
