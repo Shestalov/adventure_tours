@@ -6,19 +6,20 @@ There is filtering of routes by type, country, location.
 Login and registration are implemented and required for users.
 
 
-* Install to docker and run mongo db:
+**Install to docker and run mongo db:**
+
 https://hub.docker.com/_/mongo
 
 `$ docker run --name some-mongo -d mongo:tag`
 
-* set up environment variable for connection to mongo
-MONGO_HOST=127.0.0.1
-MONGO_PASSWORD=admin
-MONGO_PORT=27017
-MONGO_USERNAME=admin
+**set up environment variable for connection to mongo**
+* MONGO_HOST=127.0.0.1
+* MONGO_PASSWORD=admin
+* MONGO_PORT=27017
+* MONGO_USERNAME=admin
 
-* Install requirements
+**Install requirements**
 
 `$ pip install -r requirements.txt`
 
-* Run project
+**Run project**
