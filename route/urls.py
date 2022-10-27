@@ -7,7 +7,7 @@ urlpatterns = [
     path('', views.discover, name='discover'),
     path('<str:route_type>/', views.filter_route, name='route_type'),
     path('<str:route_type>/<str:country>/', views.filter_route, name='route_country'),
-    path('<str:route_type>/<str:country>/<str:location>/', views.filter_route, name='route_location'),
+    path('<str:route_type>/<str:country>/<str:location>/', views.filter_route, name='filter_route'),
 
     path('add_route', views.add_route, name='add_route'),
     path('<int:route_id>', views.route_info, name='route_info'),

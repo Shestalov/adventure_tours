@@ -22,7 +22,8 @@ def discover(request):
     if request.method == 'POST':
         route_type = request.POST.get('route_type')
         country = request.POST.get('country')
-        return filter_route(request, route_type=route_type, country=country)
+
+        return redirect('route:route_country', route_type=route_type, country=country)
 
 
 def filter_route(request, route_type=None, country=None, location=None):

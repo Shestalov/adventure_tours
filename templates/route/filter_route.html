@@ -40,25 +40,33 @@
             </ul>
 
             {# pagination #}
-            <nav aria-label="Page navigation example">
-                <ul class="pagination mb-5 justify-content-center">
-                    {% if previous_page and previous_page < current_page %}
-                        <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                        <li class="page-item"><a class="page-link" href="?page={{ previous_page }}">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="?page={{ previous_page }}">{{ previous_page }}</a></li>
-                    {% endif %}
+            {% if page_obj %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mb-5 justify-content-center">
+                        {% if previous_page and previous_page < current_page %}
+                            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ previous_page }}">Previous</a>
+                            </li>
+                            <li class="page-item"><a class="page-link"
+                                                     href="?page={{ previous_page }}">{{ previous_page }}</a></li>
+                        {% endif %}
 
-                    <li class="page-item active" aria-current="page">
-                        <a class="page-link" href="#">{{ current_page }} <span class="visually-hidden">(current)</span></a>
-                    </li>
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">{{ current_page }} <span
+                                    class="visually-hidden">(current)</span></a>
+                        </li>
 
-                    {% if next_page and current_page < all_pages %}
-                        <li class="page-item"><a class="page-link" href="?page={{ next_page }}">{{ next_page }}</a></li>
-                        <li class="page-item"><a class="page-link" href="?page={{ next_page }}">Next</a></li>
-                        <li class="page-item"><a class="page-link" href="?page={{ all_pages }}">Last ({{ all_pages }})</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
+                        {% if next_page and current_page < all_pages %}
+                            <li class="page-item"><a class="page-link" href="?page={{ next_page }}">{{ next_page }}</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="?page={{ next_page }}">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ all_pages }}">Last
+                                ({{ all_pages }})</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+
         </div>
     </div>
 {% endblock %}
