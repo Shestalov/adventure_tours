@@ -9,10 +9,11 @@
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-lg-2 col-sm-4">
-                <select class="form-select" aria-label="Default select example" id="route_type" name="route_type"
-                        required>
+                <select required class="form-select" aria-label="Default select example"
+                        id="route_type" name="route_type">
                     {% for type in route_type %}
-                        <option value="" disabled selected hidden >Choose a sport</option>
+                        {# "disabled hidden" - does not work with "selected" #}
+                        <option value="" disabled hidden>Choose a sport</option>
                         <option value="{{ type.route_type }}">{{ type.route_type }}</option>
                     {% endfor %}
                 </select>

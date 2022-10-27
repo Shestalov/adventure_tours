@@ -413,18 +413,12 @@ def add_review(request, route_id):
         return redirect('route:route_info', route_id=route_id)
 
 
-@login_required(login_url='account:login')
 def test_page(request):
-    if request.user.has_perm('route.add_review'):
-        if request.method == 'POST':
-            form = AddReviewForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Review was added")
-                return redirect('main:home')
-        else:
-            form = AddReviewForm()
-        return render(request, 'route/test_page.html', {'form': form})
-    else:
-        messages.error(request, "User does not have permission!")
-        return redirect('main:home')
+    if request.method == 'GET':
+        uniq_routes_type = models.Route.objects.values('route_type').distinct()
+        return render(request, 'route/discover.html', {'route_type': uniq_routes_type})
+    if request.method == 'POST':
+        route_type = request.POST.get('route_type')
+        country = request.POST.get('country')
+
+        return redirect('route:route_country', route_type=route_type, country=country)
