@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 import os
 from utils.validations import validation_stopping, validation_route_type, validation_date
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
 
 
 def discover(request):
@@ -59,7 +60,22 @@ def filter_route(request, route_type=None, country=None, location=None):
                'location': itm[3], 'departure': itm[4], 'destination': itm[5],
                'description': itm[6], 'duration': itm[7], 'route_id': itm[8]} for itm in result_joining]
 
-    return render(request, 'route/filter_route.html', {'result': result})
+    #  paginator
+    paginator = Paginator(result, 3)
+    page_number = int(request.GET.get('page', default=1))
+    if page_number > paginator.num_pages:
+        page_number = 1
+
+    page_obj = paginator.get_page(page_number)
+    previous_page = page_obj.previous_page_number() if page_number > 1 else 1
+    next_page = page_obj.next_page_number() if page_number < paginator.num_pages else paginator.num_pages
+    all_pages = paginator.num_pages
+
+    return render(request, 'route/filter_route.html', {'page_obj': page_obj.object_list,
+                                                       'previous_page': previous_page,
+                                                       'next_page': next_page,
+                                                       'current_page': page_number,
+                                                       'all_pages': all_pages})
 
 
 def route_info(request, route_id):
