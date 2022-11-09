@@ -282,7 +282,7 @@ def users_of_event(request, route_id, event_id):
                                os.environ['MONGO_PORT']) as db:
             collection_users = db['event_users']
 
-            if event_.event_users is not '':
+            if event_.event_users != '':
                 users = collection_users.find_one({'_id': ObjectId(event_.event_users)})
             else:
                 users = None
@@ -398,12 +398,14 @@ def add_event(request, route_id):
 @login_required(login_url='account:login')
 def add_review(request, route_id):
     if request.user.has_perm('route.add_review'):
+
         if request.method == 'GET':
             return render(request, 'route/add_review.html')
+
         if request.method == 'POST':
-            route_id = route_id
             route_review = request.POST.get('route_review')
             route_rate = request.POST.get('route_rate')
+
             new_event = models.Review(route_review=route_review, route_rate=route_rate, route_id_id=route_id)
             new_event.save()
             messages.success(request, "Review was added")
