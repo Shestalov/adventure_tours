@@ -124,7 +124,7 @@ def review(request, route_id):
     if result.exists():
         return render(request, 'route/review.html', {'result': result})
     else:
-        return render(request, 'route/does_not_exist.html', {'result': 'Reviews do not exist (msg from views)'})
+        return render(request, 'route/does_not_exist.html', {"result": "Reviews do not exist (msg from views)"})
 
 
 def event(request, route_id, event_id=None):
@@ -397,6 +397,7 @@ def add_event(request, route_id):
 
 @login_required(login_url='account:login')
 def add_review(request, route_id):
+
     if request.user.has_perm('route.add_review'):
 
         if request.method == 'GET':

@@ -1,21 +1,25 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.test import TestCase, RequestFactory
 from django.test import Client
 from django.contrib.auth.models import Permission
 
-from route.views import add_review
+import route.views
+from route.views import add_review, add_route
 from route import models
 import datetime
+import re
 
 
-def create_test_review():
+def create_test_review(*args, **kwargs):
     test_review = models.Review(route_review='test', route_rate=100, route_id_id=100)
     test_review.save()
     return test_review.pk
 
 
-def create_test_route():
+def create_test_route(*args, **kwargs):
     test_route = models.Route(route_type='TEST', departure=1,
                               stopping={'test': 'test'},
                               destination=1, route_name='TEST',
@@ -263,3 +267,109 @@ class TestReview3(TestCase):
         response = add_review(request, route_id)
         #  redirect to 'route/{route_id}' - when user has no perm
         self.assertEqual(f'/route/{route_id}', response.url)
+
+
+# fixtures
+class TestEventFixture(TestCase):
+    fixtures = ['review.json']
+
+    def test_review(self):
+        review = models.Review.objects.get(pk=2)
+        self.assertEqual(8, review.route_rate)
+
+    def test_review_2(self):
+        response = self.client.get('/route/1/review', {'route_id': 1})
+        parsed_response = re.search(r'"route_id": "1"', str(response.content)).group(0)
+        self.assertEqual('"route_id": "1"', parsed_response)
+
+
+class TestAddReviewFixtures(TestCase):
+    fixtures = ['review.json']
+
+    def setUp(self) -> None:
+        self.factory = RequestFactory()
+
+        class UserMock:
+
+            def has_perm(self, *args, **kwargs):
+                return True
+
+            def is_authenticated(self, *args, **kwargs):
+                return True
+
+        self.user = UserMock()
+
+    def test_add_review_get(self):
+        request = self.factory.get('/route/1/add_review', {'route_id': 1})
+        request.user = self.user
+        response = add_review(request, 1)
+        self.assertEqual(200, response.status_code)
+
+    def test_add_review_post(self):
+        route_id = 1
+        request = self.factory.post(f'/route/{route_id}/add_review', {'route_id': 1,
+                                                                      'route_rate': 99,
+                                                                      'route_review': 'aaa'})
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = add_review(request, route_id)
+        self.assertEqual(302, response.status_code)
+
+
+class MockCollection:
+
+    def find_one(self, *args, **kwargs):
+        return {}
+
+
+class MongoClientMock:
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def close(self):
+        pass
+
+    def __getitem__(self, item):
+        return {'stopping': MockCollection()}
+
+
+class TestAddRouteFixtures(TestCase):
+    fixtures = ['route.json']
+
+    def setUp(self) -> None:
+        self.factory = RequestFactory()
+
+        class UserMock:
+
+            def has_perm(self, *args, **kwargs):
+                return True
+
+            def is_authenticated(self, *args, **kwargs):
+                return True
+
+        self.user = UserMock()
+
+    @patch('utils.mongo_utils.MongoClient', MongoClientMock)
+    def test_add_review_2(self):
+        request = self.factory.post('/route/add_route', {'route_type': 'hiking',
+                                                         'departure': 'Lviv',
+                                                         'stopping': '',
+                                                         'destination': 'Lviv',
+                                                         'route_name': 'test',
+                                                         'country': 'Ukraine',
+                                                         'location': 'Lviv',
+                                                         'description': 'test',
+                                                         'duration': 1})
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = add_route(request)
+        self.assertEqual(302, response.status_code)
