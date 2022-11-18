@@ -1,0 +1,471 @@
+[
+  {
+    "model": "route.event",
+    "pk": 2,
+    "fields": {
+      "route": 1,
+      "event_admin": 1,
+      "event_users": "634eac61bdad52f22439dc6e",
+      "start_date": "2022-11-19",
+      "price": 98
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 3,
+    "fields": {
+      "route": 1,
+      "event_admin": 2,
+      "event_users": "634eac9523f810e4da2d2ad3",
+      "start_date": "2022-11-19",
+      "price": 99
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 4,
+    "fields": {
+      "route": 1,
+      "event_admin": 3,
+      "event_users": "634ead98cc71cb02d0c882a1",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 5,
+    "fields": {
+      "route": 2,
+      "event_admin": 1,
+      "event_users": "634ead9b044b0c243a79daa0",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 6,
+    "fields": {
+      "route": 2,
+      "event_admin": 2,
+      "event_users": "634ead9ddae39a7223c01f4e",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 7,
+    "fields": {
+      "route": 2,
+      "event_admin": 3,
+      "event_users": "634ead9f8d102e0bd4d2dfac",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 15,
+    "fields": {
+      "route": 1,
+      "event_admin": 7,
+      "event_users": "634eada0cd589d1543d8c1e6",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 16,
+    "fields": {
+      "route": 1,
+      "event_admin": 8,
+      "event_users": "634eada1be004a668aeadb90",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 17,
+    "fields": {
+      "route": 1,
+      "event_admin": 9,
+      "event_users": "634eada3e0faaef041638551",
+      "start_date": "2022-11-19",
+      "price": 100
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 19,
+    "fields": {
+      "route": 1,
+      "event_admin": 11,
+      "event_users": "634eada5158e44b17fa08c9e",
+      "start_date": "2022-11-19",
+      "price": 1
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 20,
+    "fields": {
+      "route": 1,
+      "event_admin": 12,
+      "event_users": "634eada537892b8b86b8cffc",
+      "start_date": "2022-11-19",
+      "price": 1
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 57,
+    "fields": {
+      "route": 44,
+      "event_admin": 2,
+      "event_users": "63596de319e28c8c54963a92",
+      "start_date": "2022-11-19",
+      "price": 11
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 58,
+    "fields": {
+      "route": 44,
+      "event_admin": 2,
+      "event_users": "63596ded19e28c8c54963a99",
+      "start_date": "2022-11-19",
+      "price": 11
+    }
+  },
+  {
+    "model": "route.event",
+    "pk": 59,
+    "fields": {
+      "route": 1,
+      "event_admin": 1,
+      "event_users": "636f7858386a663dfbc63ba6",
+      "start_date": "2022-11-19",
+      "price": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 1,
+    "fields": {
+      "route_name": "The longest trip 2",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "634a733609500428d03cf574",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 2,
+    "fields": {
+      "route_name": "3 amazing days ",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "634a73a10ecbd4deea1755b4",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 3
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 3,
+    "fields": {
+      "route_name": "The longest trip",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "634a73a346faa7ebae83c8c2",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 7
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 32,
+    "fields": {
+      "route_name": "Track for adults-pensioners",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "634a73f13cc0f826e74c4e69",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 33,
+    "fields": {
+      "route_name": "Dont brake your bike",
+      "route_type": "cycling",
+      "departure": 1,
+      "stopping": "634a73f34eee317bb65c1c1b",
+      "destination": 1,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 36,
+    "fields": {
+      "route_name": "The biggest mountain in Lviv",
+      "route_type": "cycling",
+      "departure": 1,
+      "stopping": "634a73f481904baf1c5b8358",
+      "destination": 1,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 37,
+    "fields": {
+      "route_name": "Fask track",
+      "route_type": "cycling",
+      "departure": 3,
+      "stopping": "634a73f5579d137e67726a17",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 38,
+    "fields": {
+      "route_name": "Amazing view track",
+      "route_type": "hiking",
+      "departure": 2,
+      "stopping": "634a73f739870f3b990a2542",
+      "destination": 2,
+      "country": "Ukraine",
+      "location": "Lviv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 8
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 39,
+    "fields": {
+      "route_name": "Lviv again",
+      "route_type": "cycling",
+      "departure": 2,
+      "stopping": "634a742727533b63184cca53",
+      "destination": 2,
+      "country": "Ukraine",
+      "location": "Lviv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 40,
+    "fields": {
+      "route_name": "Best in Cherkasy",
+      "route_type": "cycling",
+      "departure": 3,
+      "stopping": "634a7428528c9decf36ede83",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 42,
+    "fields": {
+      "route_name": "Another track",
+      "route_type": "cycling",
+      "departure": 1,
+      "stopping": "634a742a68e1d6a9c3baae03",
+      "destination": 1,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 43,
+    "fields": {
+      "route_name": "Another track 2",
+      "route_type": "cycling",
+      "departure": 1,
+      "stopping": "634a7487001afacec25565fd",
+      "destination": 1,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 44,
+    "fields": {
+      "route_name": "Best for downhill",
+      "route_type": "cycling",
+      "departure": 1,
+      "stopping": "634a74890618d358ccbd1081",
+      "destination": 1,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 45,
+    "fields": {
+      "route_name": "Cycling climbing route",
+      "route_type": "cycling",
+      "departure": 2,
+      "stopping": "634a748b54d0c0ef0b65015a",
+      "destination": 2,
+      "country": "Lviv",
+      "location": "Lviv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 46,
+    "fields": {
+      "route_name": "Lviv short hiking route",
+      "route_type": "hiking",
+      "departure": 2,
+      "stopping": "634ea89d8ada074b77692b7e",
+      "destination": 2,
+      "country": "Ukraine",
+      "location": "Lviv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 1
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 47,
+    "fields": {
+      "route_name": "Lviv best hiking route 2",
+      "route_type": "hiking",
+      "departure": 2,
+      "stopping": "634ea8d550d2402a6b644e27",
+      "destination": 2,
+      "country": "Ukraine",
+      "location": "Lviv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 2
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 48,
+    "fields": {
+      "route_name": "Lviv best hiking route",
+      "route_type": "hiking",
+      "departure": 2,
+      "stopping": "634ea8de98272be1259c7573",
+      "destination": 2,
+      "country": "Ukraine",
+      "location": "Lviv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 2
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 49,
+    "fields": {
+      "route_name": "3 amazing days ",
+      "route_type": "hiking",
+      "departure": 1,
+      "stopping": "63567c186eea7d57b62e0ade",
+      "destination": 1,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 3
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 50,
+    "fields": {
+      "route_name": "Nice route for hiking",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "63591f57e016b34869c658e7",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Cherkasy",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 3
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 51,
+    "fields": {
+      "route_name": "Nice route for hiking",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "635921c2aa32a2427123e81e",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 3
+    }
+  },
+  {
+    "model": "route.route",
+    "pk": 52,
+    "fields": {
+      "route_name": "Nice route for hiking",
+      "route_type": "hiking",
+      "departure": 3,
+      "stopping": "635921ea2665759ac6146d1b",
+      "destination": 3,
+      "country": "Ukraine",
+      "location": "Kyiv",
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "duration": 3
+    }
+  }
+]
